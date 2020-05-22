@@ -1,0 +1,2 @@
+rootProject.name='Conversic'
+include ':app'
