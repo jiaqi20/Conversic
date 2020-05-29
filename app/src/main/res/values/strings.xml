@@ -1,3 +1,12 @@
 <resources>
     <string name="app_name">Conversic</string>
+    <string name="welcome">Welcome!</string>
+    <string name="name">Name</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="login">Log In</string>
+    <string name="register">New? Register here!</string>
+    <string name="register2">Register</string>
+    <string name="logout">Log Out</string>
+    <string name="ady_login">Already Registered? Login Here!</string>
 </resources>
