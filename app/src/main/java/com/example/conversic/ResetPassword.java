@@ -47,7 +47,7 @@ public class ResetPassword extends AppCompatActivity {
                                 startActivity(new Intent(getApplicationContext(), Login.class));
                             } else {
                                 String err = task.getException().getMessage();
-                                Toast.makeText(ResetPassword.this, "Error occurred: err",
+                                Toast.makeText(ResetPassword.this, "Error occurred: " + err,
                                         Toast.LENGTH_SHORT).show();
                             }
                         }
