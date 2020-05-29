@@ -74,4 +74,8 @@ public class Login extends AppCompatActivity {
     public void register(View view) {
         startActivity(new Intent(getApplicationContext(), Register.class));
     }
+
+    public void forgetPassword(View view) {
+        startActivity(new Intent(getApplicationContext(), ResetPassword.class));
+    }
 }

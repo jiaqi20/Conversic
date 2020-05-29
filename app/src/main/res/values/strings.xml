@@ -6,6 +6,7 @@
     <string name="password">Password</string>
     <string name="login">Log In</string>
     <string name="register">New? Register here!</string>
+    <string name="forget">Forget Password?</string>
     <string name="register2">Register</string>
     <string name="logout">Log Out</string>
     <string name="ady_login">Already Registered? Login Here!</string>
