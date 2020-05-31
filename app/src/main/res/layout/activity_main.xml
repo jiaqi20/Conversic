@@ -7,20 +7,22 @@
     tools:context=".MainActivity">
 
     <Button
-        android:id="@+id/button6"
+        android:id="@+id/buttonCC"
         android:layout_width="291dp"
         android:layout_height="75dp"
         android:text="Crash Course"
         tools:layout_editor_absoluteX="60dp"
-        tools:layout_editor_absoluteY="328dp" />
+        tools:layout_editor_absoluteY="328dp"
+        android:textAllCaps="false"/>
 
     <Button
-        android:id="@+id/button7"
+        android:id="@+id/buttonLib"
         android:layout_width="291dp"
         android:layout_height="75dp"
         android:text="Library"
         tools:layout_editor_absoluteX="60dp"
-        tools:layout_editor_absoluteY="488dp" />
+        tools:layout_editor_absoluteY="488dp"
+        android:textAllCaps="false"/>
 
     <TextView
         android:id="@+id/textView4"
@@ -36,7 +38,7 @@
         app:layout_constraintVertical_bias="0.077" />
 
     <Button
-        android:id="@+id/button"
+        android:id="@+id/buttonLogOut"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:onClick="logout"
@@ -46,14 +48,16 @@
         app:layout_constraintHorizontal_bias="0.049"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView4"
-        app:layout_constraintVertical_bias="0.955" />
+        app:layout_constraintVertical_bias="0.955"
+        android:textAllCaps="false"/>
 
     <Button
-        android:id="@+id/button3"
+        android:id="@+id/buttonConversic"
         android:layout_width="291dp"
         android:layout_height="75dp"
         android:text="Conversic"
         tools:layout_editor_absoluteX="60dp"
-        tools:layout_editor_absoluteY="173dp" />
+        tools:layout_editor_absoluteY="173dp"
+        android:textAllCaps="false"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

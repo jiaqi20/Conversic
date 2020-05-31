@@ -40,11 +40,12 @@
         tools:layout_editor_absoluteY="193dp" />
 
     <Button
-        android:id="@+id/button10"
+        android:id="@+id/buttonCLib"
         android:layout_width="260dp"
         android:layout_height="75dp"
         android:text="Check Library"
         tools:layout_editor_absoluteX="75dp"
-        tools:layout_editor_absoluteY="584dp" />
+        tools:layout_editor_absoluteY="584dp"
+        android:textAllCaps="false" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
