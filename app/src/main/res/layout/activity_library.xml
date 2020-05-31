@@ -8,9 +8,9 @@
 
     <Button
         android:id="@+id/button8"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Back"
+        android:layout_width="55dp"
+        android:layout_height="50dp"
+        android:drawableLeft="@android:drawable/ic_menu_revert"
         tools:layout_editor_absoluteX="12dp"
-        tools:layout_editor_absoluteY="12dp" />
+        tools:layout_editor_absoluteY="13dp" />
 </androidx.constraintlayout.widget.ConstraintLayout>
