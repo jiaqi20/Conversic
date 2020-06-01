@@ -32,7 +32,7 @@ public class Login extends AppCompatActivity {
         welcome = findViewById(R.id.welcome);
         email = findViewById(R.id.email);
         password = findViewById(R.id.password);
-        login = findViewById(R.id.login);
+        login = findViewById(R.id.buttonLogin);
         register = findViewById(R.id.textView);
         fAuth = FirebaseAuth.getInstance();
 

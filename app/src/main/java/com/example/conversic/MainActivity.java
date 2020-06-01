@@ -19,8 +19,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        appName = findViewById(R.id.textView4);
-        logout = findViewById(R.id.button);
+        appName = findViewById(R.id.textViewMainMenu);
+        logout = findViewById(R.id.buttonLogOut);
     }
 
     public void logout(View view) {

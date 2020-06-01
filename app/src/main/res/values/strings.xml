@@ -10,4 +10,15 @@
     <string name="register2">Register</string>
     <string name="logout">Log Out</string>
     <string name="ady_login">Already Registered? Login Here!</string>
+    <string name="welcome_to_conversic">Welcome to Conversic!</string>
+    <string name="crash_course">Crash Course</string>
+    <string name="main_menu">Main Menu</string>
+    <string name="conversic">Conversic</string>
+    <string name="library">Library</string>
+    <string name="send_email">Send Email</string>
+    <string name="forgot_your_password_let_us_send_you_a_verification_email_and_help_is_on_the_way">Forgot your password? Let us send you a verification email and help is on the way!</string>
+    <string name="select_your_conversion_type">Select your conversion type:</string>
+    <string name="check_library">Check Library</string>
+    <string name="_1">1</string>
+    <string name="_2">2</string>
 </resources>
