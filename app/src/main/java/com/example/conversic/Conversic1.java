@@ -7,15 +7,16 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
-public class LibraryActivity extends AppCompatActivity {
+public class Conversic1 extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_library);
+        setContentView(R.layout.activity_conversic1);
 
-        //Navigation: Back Button
-        Button btnBack = findViewById(R.id.buttonBack);
+        Button btnBack;
+
+        btnBack = findViewById(R.id.buttonBack);
 
         btnBack.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -26,7 +27,7 @@ public class LibraryActivity extends AppCompatActivity {
     }
 
     private void moveBack(){
-        Intent intent = new Intent(LibraryActivity.this, MainActivity.class);
+        Intent intent = new Intent(Conversic1.this, ConversicActivity.class);
         startActivity(intent);
     }
 }

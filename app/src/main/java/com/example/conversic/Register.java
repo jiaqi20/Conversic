@@ -24,13 +24,13 @@ public class Register extends AppCompatActivity {
     private Button register2;
     private FirebaseAuth fAuth;
 
-    //Navigation: Back Button
-    private Button btnBack;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
+
+        //Navigation: Back Button
+        Button btnBack;
 
         register = findViewById(R.id.textView2);
         login = findViewById(R.id.textView3);
