@@ -28,7 +28,7 @@ public class ResetPassword extends AppCompatActivity {
         setContentView(R.layout.activity_reset_password);
 
         email = findViewById(R.id.editText);
-        button = findViewById(R.id.button2);
+        button = findViewById(R.id.buttonSE);
         fAuth = FirebaseAuth.getInstance();
         btnBack = findViewById(R.id.buttonBack);
 
@@ -54,7 +54,7 @@ public class ResetPassword extends AppCompatActivity {
                             if(task.isSuccessful()) {
                                 Toast.makeText(ResetPassword.this, "Link is successfully sent to your email!",
                                         Toast.LENGTH_SHORT).show();
-                                startActivity(new Intent(getApplicationContext(), Login.class));
+                                startActivity(new Intent(ResetPassword.this, Login.class));
                             } else {
                                 String err = task.getException().getMessage();
                                 Toast.makeText(ResetPassword.this, "Error occurred: " + err,

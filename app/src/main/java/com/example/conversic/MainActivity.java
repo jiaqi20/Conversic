@@ -15,9 +15,9 @@ public class MainActivity extends AppCompatActivity {
     private Button logout;
 
     //Navigation: Menu Buttons
-    private Button btnConversic = findViewById(R.id.buttonConversic);
-    private Button btnCC = findViewById(R.id.buttonCC);
-    private Button btnLib = findViewById(R.id.buttonLib);
+    private Button btnConversic;
+    private Button btnCC;
+    private Button btnLib;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,6 +26,10 @@ public class MainActivity extends AppCompatActivity {
 
         appName = findViewById(R.id.textViewMainMenu);
         logout = findViewById(R.id.buttonLogOut);
+
+        btnConversic = findViewById(R.id.buttonConversic);
+        btnCC = findViewById(R.id.buttonCC);
+        btnLib = findViewById(R.id.buttonLib);
 
         //Navigation: Menu Buttons
         btnConversic.setOnClickListener(new View.OnClickListener() {

@@ -10,7 +10,6 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".LibraryActivity"></activity>
-        <activity android:name=".CrashCourseActivity" />
         <activity android:name=".ConversicActivity" />
         <activity android:name=".ResetPassword" />
         <activity android:name=".MainActivity" />
