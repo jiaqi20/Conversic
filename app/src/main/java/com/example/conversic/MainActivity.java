@@ -14,6 +14,11 @@ public class MainActivity extends AppCompatActivity {
     private TextView appName;
     private Button logout;
 
+    //Navigation: Menu Buttons
+    private Button btnConversic = findViewById(R.id.buttonConversic);
+    private Button btnCC = findViewById(R.id.buttonCC);
+    private Button btnLib = findViewById(R.id.buttonLib);
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -21,6 +26,42 @@ public class MainActivity extends AppCompatActivity {
 
         appName = findViewById(R.id.textViewMainMenu);
         logout = findViewById(R.id.buttonLogOut);
+
+        //Navigation: Menu Buttons
+        btnConversic.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                moveToConversicActivity();
+            }
+        });
+        btnCC.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                moveToCCActivity();
+            }
+        });
+        btnLib.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                moveToLibActivity();
+            }
+        });
+    }
+
+    //Navigation: Menu Buttons
+    private void moveToConversicActivity(){
+        Intent intent = new Intent(MainActivity.this, ConversicActivity.class);
+        startActivity(intent);
+    }
+
+    private void moveToCCActivity(){
+        Intent intent = new Intent(MainActivity.this, CrashCourseActivity.class);
+        startActivity(intent);
+    }
+
+    private void moveToLibActivity(){
+        Intent intent = new Intent(MainActivity.this, LibraryActivity.class);
+        startActivity(intent);
     }
 
     public void logout(View view) {

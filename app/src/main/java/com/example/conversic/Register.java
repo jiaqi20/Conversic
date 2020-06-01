@@ -24,6 +24,9 @@ public class Register extends AppCompatActivity {
     private Button register2;
     private FirebaseAuth fAuth;
 
+    //Navigation: Back Button
+    private Button btnBack;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -37,6 +40,15 @@ public class Register extends AppCompatActivity {
         fAuth = FirebaseAuth.getInstance();
         //progressbar
         register2 = findViewById(R.id.buttonRegister);
+        btnBack = findViewById(R.id.buttonBack);
+
+        //Navigation: Back Button
+        btnBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                moveBack();
+            }
+        });
 
         if(fAuth.getCurrentUser() != null) {
             startActivity(new Intent(getApplicationContext(), Login.class));
@@ -82,5 +94,11 @@ public class Register extends AppCompatActivity {
 
     public void onClick(View view) {
         startActivity(new Intent(getApplicationContext(), Login.class));
+    }
+
+    //Navigation: Back Button
+    private void moveBack(){
+        Intent intent = new Intent(Register.this, Login.class);
+        startActivity(intent);
     }
 }
