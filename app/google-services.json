@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "761359875922",
+    "firebase_url": "https://conversic.firebaseio.com",
+    "project_id": "conversic",
+    "storage_bucket": "conversic.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:761359875922:android:1a35661d1c6845b635048b",
+        "android_client_info": {
+          "package_name": "com.example.conversic"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "761359875922-pk0ldeuc8efvimq9b8dcc7f70o4tm781.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.conversic",
+            "certificate_hash": "f589f89ecdceccd9846acd47bb57c85fc9113165"
+          }
+        },
+        {
+          "client_id": "761359875922-8rs7usgd8hjns7853bmrhf1hf0jsghl1.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBtt2RUn1bb3zZYXhVLZDmUUPBwflyeomc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "761359875922-8rs7usgd8hjns7853bmrhf1hf0jsghl1.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
