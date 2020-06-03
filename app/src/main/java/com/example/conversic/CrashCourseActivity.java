@@ -9,13 +9,13 @@ import android.widget.Button;
 
 public class CrashCourseActivity extends AppCompatActivity {
 
+    //Navigation: Back Button
+    Button btnBack;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_crash_course);
-
-        //Navigation: Back Button
-        Button btnBack;
 
         //Navigation: Back Button
         btnBack = findViewById(R.id.buttonBack);

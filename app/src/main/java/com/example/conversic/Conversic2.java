@@ -8,13 +8,13 @@ import android.view.View;
 import android.widget.Button;
 
 public class Conversic2 extends AppCompatActivity {
+    private Button btnBack;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_conversic2);
-
-        Button btnBack;
 
         btnBack = findViewById(R.id.buttonBack);
 

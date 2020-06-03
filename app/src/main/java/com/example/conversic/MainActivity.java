@@ -12,7 +12,7 @@ import com.google.firebase.auth.FirebaseAuth;
 
 public class MainActivity extends AppCompatActivity {
     private TextView appName;
-    private Button logout;
+    private Button logout, btnConversic, btnCC, btnLib;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,9 +23,9 @@ public class MainActivity extends AppCompatActivity {
         logout = findViewById(R.id.buttonLogOut);
 
         //Navigation: Menu Buttons
-        Button btnConversic = findViewById(R.id.buttonConversic);
-        Button btnCC = findViewById(R.id.buttonCC);
-        Button btnLib = findViewById(R.id.buttonLib);
+        btnConversic = findViewById(R.id.buttonConversic);
+        btnCC = findViewById(R.id.buttonCC);
+        btnLib = findViewById(R.id.buttonLib);
 
         //Navigation: Menu Buttons
         btnConversic.setOnClickListener(new View.OnClickListener() {

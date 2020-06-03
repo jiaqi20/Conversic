@@ -9,13 +9,14 @@ import android.widget.Button;
 
 public class LibraryActivity extends AppCompatActivity {
 
+    private Button btnBack;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_library);
 
         //Navigation: Back Button
-        Button btnBack = findViewById(R.id.buttonBack);
+        btnBack = findViewById(R.id.buttonBack);
 
         btnBack.setOnClickListener(new View.OnClickListener() {
             @Override

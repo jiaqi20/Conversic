@@ -9,12 +9,13 @@ import android.widget.Button;
 
 public class Conversic1 extends AppCompatActivity {
 
+
+    private Button btnBack;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_conversic1);
-
-        Button btnBack;
 
         btnBack = findViewById(R.id.buttonBack);
 

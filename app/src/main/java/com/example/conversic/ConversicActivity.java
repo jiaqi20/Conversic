@@ -10,18 +10,18 @@ import android.widget.ImageButton;
 
 public class ConversicActivity extends AppCompatActivity {
 
+    //Navigation: Back Button
+    Button btnBack;
+
+    //Navigation: Selection Buttons
+    ImageButton btn1;
+    ImageButton btn2;
+    Button btnCLib;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_conversic);
-
-        //Navigation: Back Button
-        Button btnBack;
-
-        //Navigation: Selection Buttons
-        ImageButton btn1;
-        ImageButton btn2;
-        Button btnCLib;
 
         //Navigation: Back Button
         btnBack = findViewById(R.id.buttonBack);
