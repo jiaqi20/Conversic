@@ -10,7 +10,7 @@ import android.widget.Button;
 public class CrashCourseActivity extends AppCompatActivity {
 
     //Navigation: Back Button
-    Button btnBack;
+    private Button btnBack;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
