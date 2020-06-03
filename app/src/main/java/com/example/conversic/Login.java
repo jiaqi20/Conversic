@@ -61,7 +61,7 @@ public class Login extends AppCompatActivity {
                                     Toast.LENGTH_SHORT).show();
                             startActivity(new Intent(getApplicationContext(), MainActivity.class));
                         } else {
-                            Toast.makeText(Login.this, "Error!",
+                            Toast.makeText(Login.this, "Error: " + task.getException().getMessage(),
                                     Toast.LENGTH_SHORT).show();
                         }
                     }
@@ -70,6 +70,7 @@ public class Login extends AppCompatActivity {
             }
         });
     }
+
 
     public void register(View view) {
         startActivity(new Intent(getApplicationContext(), Register.class));
