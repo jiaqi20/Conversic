@@ -39,34 +39,7 @@ public class Login extends AppCompatActivity {
         login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String em = email.getText().toString().trim();
-                String pw = password.getText().toString().trim();
-
-                //validate the email and password
-                if(TextUtils.isEmpty(em)) {
-                    email.setError("Email is required!");
-                    return;
-                }
-                if(TextUtils.isEmpty(pw)) {
-                    password.setError("Password is required!");
-                    return;
-                }
-
-                //authenticate the user
-                fAuth.signInWithEmailAndPassword(em, pw).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if(task.isSuccessful()) {
-                            Toast.makeText(Login.this, "Logged in successfully",
-                                    Toast.LENGTH_SHORT).show();
-                            startActivity(new Intent(getApplicationContext(), MainActivity.class));
-                        } else {
-                            Toast.makeText(Login.this, "Error: " + task.getException().getMessage(),
-                                    Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                });
-
+                loginUser();
             }
         });
     }
@@ -78,5 +51,35 @@ public class Login extends AppCompatActivity {
 
     public void forgetPassword(View view) {
         startActivity(new Intent(getApplicationContext(), ResetPassword.class));
+    }
+
+    public void loginUser() {
+        String em = email.getText().toString().trim();
+        String pw = password.getText().toString().trim();
+
+        //validate the email and password
+        if(TextUtils.isEmpty(em)) {
+            email.setError("Email is required!");
+            return;
+        }
+        if(TextUtils.isEmpty(pw)) {
+            password.setError("Password is required!");
+            return;
+        }
+
+        //authenticate the user
+        fAuth.signInWithEmailAndPassword(em, pw).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+            @Override
+            public void onComplete(@NonNull Task<AuthResult> task) {
+                if(task.isSuccessful()) {
+                    Toast.makeText(Login.this, "Logged in successfully",
+                            Toast.LENGTH_SHORT).show();
+                    startActivity(new Intent(getApplicationContext(), MainActivity.class));
+                } else {
+                    Toast.makeText(Login.this, "Error: " + task.getException().getMessage(),
+                            Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
     }
 }

@@ -51,44 +51,17 @@ public class Register extends AppCompatActivity {
             }
         });
 
+        /*
         if(fAuth.getCurrentUser() != null) {
             startActivity(new Intent(getApplicationContext(), Login.class));
             finish();
         }
+         */
 
         register2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String em = email.getText().toString().trim();
-                String pw = password.getText().toString().trim();
-
-                //validate the email and password
-                if(TextUtils.isEmpty(em)) {
-                    email.setError("Email is required!");
-                    return;
-                }
-                if(TextUtils.isEmpty(pw)) {
-                    password.setError("Password is required!");
-                    return;
-                }
-
-                //progressBar.setVisibility(View.VISIBLE); need to set invisible first
-
-                //register user
-                fAuth.createUserWithEmailAndPassword(em, pw).addOnCompleteListener(
-                        new OnCompleteListener<AuthResult>() {
-                            @Override
-                            public void onComplete(@NonNull Task<AuthResult> task) {
-                                if(task.isSuccessful()) {
-                                    Toast.makeText(Register.this, "User created",
-                                            Toast.LENGTH_SHORT).show();
-                                    startActivity(new Intent(getApplicationContext(), MainActivity.class));
-                                } else {
-                                    Toast.makeText(Register.this, "Error!",
-                                            Toast.LENGTH_SHORT).show();
-                                }
-                            }
-                        });
+                registerUser();
             }
         });
     }
@@ -101,5 +74,38 @@ public class Register extends AppCompatActivity {
     private void moveBack(){
         Intent intent = new Intent(Register.this, Login.class);
         startActivity(intent);
+    }
+
+    private void registerUser() {
+        String em = email.getText().toString().trim();
+        String pw = password.getText().toString().trim();
+
+        //validate the email and password
+        if(TextUtils.isEmpty(em)) {
+            email.setError("Email is required!");
+            return;
+        }
+        if(TextUtils.isEmpty(pw)) {
+            password.setError("Password is required!");
+            return;
+        }
+
+        //progressBar.setVisibility(View.VISIBLE); need to set invisible first
+
+        //register user
+        fAuth.createUserWithEmailAndPassword(em, pw).addOnCompleteListener(
+                new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if(task.isSuccessful()) {
+                            Toast.makeText(Register.this, "User created",
+                                    Toast.LENGTH_SHORT).show();
+                            startActivity(new Intent(getApplicationContext(), MainActivity.class));
+                        } else {
+                            Toast.makeText(Register.this, "Error!",
+                                    Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
     }
 }
