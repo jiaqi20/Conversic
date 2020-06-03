@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 
 public class ConversicActivity extends AppCompatActivity {
 
@@ -18,8 +19,8 @@ public class ConversicActivity extends AppCompatActivity {
         Button btnBack;
 
         //Navigation: Selection Buttons
-        Button btn1;
-        Button btn2;
+        ImageButton btn1;
+        ImageButton btn2;
         Button btnCLib;
 
         //Navigation: Back Button
@@ -33,8 +34,8 @@ public class ConversicActivity extends AppCompatActivity {
         });
 
         //Navigation: Selection Buttons
-        btn1 = findViewById(R.id.button1);
-        btn2 = findViewById(R.id.button2);
+        btn1 = findViewById(R.id.imageButton1);
+        btn2 = findViewById(R.id.imageButton2);
         btnCLib = findViewById(R.id.buttonCLib);
 
         btn1.setOnClickListener(new View.OnClickListener() {
