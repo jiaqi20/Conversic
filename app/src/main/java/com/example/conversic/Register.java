@@ -51,12 +51,10 @@ public class Register extends AppCompatActivity {
             }
         });
 
-        /*
         if(fAuth.getCurrentUser() != null) {
             startActivity(new Intent(getApplicationContext(), Login.class));
             finish();
         }
-         */
 
         register2.setOnClickListener(new View.OnClickListener() {
             @Override
