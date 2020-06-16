@@ -51,9 +51,8 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
                 @Override
                 public void onClick(View v) {
                     int position = recyclerView.getChildLayoutPosition(v);
-                    Intent intent = new Intent();
-                    intent.setType(Intent.ACTION_VIEW);
-                    intent.setData(Uri.parse(uploads.get(position).getImgUrl()));
+                    Uri uri = Uri.parse(uploads.get(position).getImgUrl());
+                    Intent intent = new Intent(Intent.ACTION_VIEW, uri);
                     context.startActivity(intent);
                 }
             });
