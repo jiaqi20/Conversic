@@ -427,10 +427,10 @@ public class Conversic1 extends AppCompatActivity {
         Canvas canvas = page.getCanvas();
 
         title.setTextAlign(Paint.Align.CENTER);
-        canvas.drawText("" + fileDescription.getText(), 100, 50, title);
+        canvas.drawText("" + fileDescription.getText(), 100, 40, title);
 
-        canvas.drawText("1 = " + key + "  " + time, 20, 60, title);
-
+        title.setTextAlign(Paint.Align.LEFT);
+        canvas.drawText("1 = " + key + "  " + time, 20, 70, title);
 
         int x = 20;
         int y = 100;
