@@ -6,6 +6,7 @@ import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.core.content.FileProvider;
 
 import android.Manifest;
 import android.app.ProgressDialog;
@@ -60,11 +61,12 @@ public class Conversic1 extends AppCompatActivity {
     private static final int PERMISSION = 9;
     private static final int ACTIVITY = 86;
 
-    private Button btnBack, btnBrowse, btnConvert, btnCLib;
+    private Button btnBack, btnBrowse, btnConvert, btnUpload, btnCLib;
     private TextView txtViewDisplay, txtViewMusicString;
     private EditText fileDescription;
 
     private Uri uri;
+    private Uri contentUri;
 
     private static final double semiquaver = 0.9375;
     private static final double quaver = semiquaver * 2;
@@ -88,7 +90,7 @@ public class Conversic1 extends AppCompatActivity {
 
     private StorageTask uploadTask;
 
-    private ProgressDialog progressDialog;
+    private ProgressBar progressUpload;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -106,7 +108,10 @@ public class Conversic1 extends AppCompatActivity {
         btnBack = findViewById(R.id.buttonBack);
         btnBrowse = findViewById(R.id.buttonBrowse);
         btnConvert = findViewById(R.id.buttonConvert);
+        btnUpload = findViewById(R.id.buttonUpload);
         btnCLib = findViewById(R.id.buttonCLib);
+
+        progressUpload = findViewById(R.id.progressUpload);
 
         btnBack.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -119,7 +124,6 @@ public class Conversic1 extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 browseFile();
-                uploadFile(uri);
             }
         });
 
@@ -129,11 +133,18 @@ public class Conversic1 extends AppCompatActivity {
             public void onClick(View v) {
                 Uri uriOutput = null;
                 try {
-                    uriOutput = convertFile();
+                    //uriOutput = convertFile();
+                    convertFile();
                 } catch (ParserConfigurationException | IOException | ParsingException e) {
                     Toast.makeText(Conversic1.this, e.getMessage(), Toast.LENGTH_LONG).show();
                 }
-                uploadFile(uriOutput);
+            }
+        });
+
+        btnUpload.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                uploadFile();
             }
         });
 
@@ -189,7 +200,7 @@ public class Conversic1 extends AppCompatActivity {
     }
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
-    private Uri convertFile() throws ParserConfigurationException, IOException, ParsingException {
+    private void convertFile() throws ParserConfigurationException, IOException, ParsingException {
         StaccatoParserListener listener = new StaccatoParserListener();
         MusicXmlParser parser = new MusicXmlParser();
 
@@ -239,10 +250,11 @@ public class Conversic1 extends AppCompatActivity {
             }
         }
 
-        txtViewMusicString.setText(converted.toString());
+        txtViewMusicString.setText(uri.toString());
 
+        createPdf(converted);
         //return uri of converted sheet so that it can be uploaded to library
-        return createPdf(converted);
+        //return createPdf(converted);
     }
 
     //hardcode
@@ -321,7 +333,7 @@ public class Conversic1 extends AppCompatActivity {
 
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
-    private Uri createPdf(List<String> items) {
+    private void createPdf(List<String> items) {
         PdfDocument pdf = new PdfDocument();
         Paint title = new Paint();
         Paint paint = new Paint();
@@ -353,7 +365,7 @@ public class Conversic1 extends AppCompatActivity {
         }
         pdf.finishPage(page);
         //getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS),"test.pdf"
-        String path = "/sdcard/Documents/test.pdf";
+        String path = "/sdcard/Documents/test2.pdf";
         File file = new File(path);
         try {
             pdf.writeTo(new FileOutputStream(file));
@@ -361,20 +373,21 @@ public class Conversic1 extends AppCompatActivity {
             e.printStackTrace();
         }
         pdf.close();
-        return Uri.parse("file://" + path);
+        //uploadFile(Uri.parse("file://" + path));
+        contentUri = FileProvider.getUriForFile(this, "com.example.conversic", file);
     }
 
 
 
-    private void uploadFile(Uri uri) {
+    private void uploadFile() {
         if(uploadTask != null && uploadTask.isInProgress()) {
             Toast.makeText(Conversic1.this, "Upload in progress", Toast.LENGTH_LONG).show();
         } else {
-            if(uri != null) {
+            if(contentUri != null) {
                 final StorageReference fileReference = storageRef.child(System.currentTimeMillis()
-                        + "." + getFileExtension(uri));
+                        + "." + getFileExtension(contentUri));
 
-                uploadTask = fileReference.putFile(uri)
+                uploadTask = fileReference.putFile(contentUri)
                         .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                             @Override
                             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
@@ -382,17 +395,14 @@ public class Conversic1 extends AppCompatActivity {
                                 handler.postDelayed(new Runnable() {
                                     @Override
                                     public void run() {
-                                        progressDialog = new ProgressDialog(Conversic1.this);
-                                        progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-                                        progressDialog.setProgress(0);
-                                        progressDialog.setTitle("Uploading file...");
-                                        progressDialog.show();
+                                        progressUpload.setProgress(0);
                                     }
                                 }, 500);
                                 fileReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                                     @Override
                                     public void onSuccess(Uri uri) {
-                                        Upload upload = new Upload(fileDescription.getText().toString().trim(),
+                                        Upload upload = new Upload(fileDescription.getText().toString().trim() +
+                                                "." + getFileExtension(contentUri),
                                                 uri.toString()); // toString or getPath?
                                         String uploadID = databaseRef.push().getKey();
                                         databaseRef.child(user.getUid()).child(uploadID).setValue(upload);
@@ -412,7 +422,7 @@ public class Conversic1 extends AppCompatActivity {
                             @Override
                             public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
                                 int progress = (int) (100.0 * taskSnapshot.getBytesTransferred()/taskSnapshot.getTotalByteCount());
-                                progressDialog.setProgress(progress);
+                                progressUpload.setProgress(progress);
                             }
                         });
             } else {

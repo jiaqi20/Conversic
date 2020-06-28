@@ -51,14 +51,14 @@
         android:id="@+id/buttonConvert"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Convert/Upload"
+        android:text="Convert"
         android:textSize="20sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintHorizontal_bias="0.287"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/editTextDescription"
-        app:layout_constraintVertical_bias="0.096" />
+        app:layout_constraintVertical_bias="0.101" />
 
     <EditText
         android:id="@+id/editTextDescription"
@@ -85,7 +85,7 @@
         app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textViewMusicString"
-        app:layout_constraintVertical_bias="0.427" />
+        app:layout_constraintVertical_bias="0.224" />
 
     <TextView
         android:id="@+id/textViewMusicString"
@@ -98,7 +98,32 @@
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/buttonConvert"
-        app:layout_constraintVertical_bias="0.18" />
+        app:layout_constraintVertical_bias="0.254" />
+
+    <Button
+        android:id="@+id/buttonUpload"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Upload"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.767"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/editTextDescription"
+        app:layout_constraintVertical_bias="0.101" />
+
+    <ProgressBar
+        android:id="@+id/progressUpload"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/buttonUpload"
+        app:layout_constraintVertical_bias="0.105" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
