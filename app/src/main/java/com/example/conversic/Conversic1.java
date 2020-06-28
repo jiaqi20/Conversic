@@ -2,6 +2,7 @@ package com.example.conversic;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -11,7 +12,11 @@ import android.app.ProgressDialog;
 import android.content.ContentResolver;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Canvas;
+import android.graphics.Paint;
+import android.graphics.pdf.PdfDocument;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
@@ -34,16 +39,48 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.StorageTask;
 import com.google.firebase.storage.UploadTask;
 
+import org.jfugue.integration.MusicXmlParser;
+import org.jfugue.pattern.Pattern;
+import org.jfugue.theory.Note;
+import org.staccato.SignatureSubparser;
+import org.staccato.StaccatoParserListener;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.xml.parsers.ParserConfigurationException;
+
+import nu.xom.ParsingException;
+
 public class Conversic1 extends AppCompatActivity {
 
     private static final int PERMISSION = 9;
     private static final int ACTIVITY = 86;
 
     private Button btnBack, btnBrowse, btnConvert, btnCLib;
-    private TextView txtViewDisplay;
+    private TextView txtViewDisplay, txtViewMusicString;
     private EditText fileDescription;
 
     private Uri uri;
+
+    private static final double semiquaver = 0.9375;
+    private static final double quaver = semiquaver * 2;
+    private static final double crotchet = quaver * 2;
+    private static final double minim = crotchet * 2;
+
+    private static final int rest = 0;
+    private static final String barLine = "b";
+
+    private int C;
+    private int D;
+    private int E;
+    private int F;
+    private int G;
+    private int A;
+    private int B;
 
     private FirebaseUser user;
     private StorageReference storageRef;
@@ -63,6 +100,7 @@ public class Conversic1 extends AppCompatActivity {
         databaseRef = FirebaseDatabase.getInstance().getReference("uploads");
 
         txtViewDisplay = findViewById(R.id.textViewDisplay);
+        txtViewMusicString = findViewById(R.id.textViewMusicString);
         fileDescription = findViewById(R.id.editTextDescription);
 
         btnBack = findViewById(R.id.buttonBack);
@@ -81,13 +119,20 @@ public class Conversic1 extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 browseFile();
+                uploadFile(uri);
             }
         });
 
         btnConvert.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.KITKAT)
             @Override
             public void onClick(View v) {
-                Uri uriOutput = convertFile();
+                Uri uriOutput = null;
+                try {
+                    uriOutput = convertFile();
+                } catch (ParserConfigurationException | IOException | ParsingException e) {
+                    Toast.makeText(Conversic1.this, e.getMessage(), Toast.LENGTH_LONG).show();
+                }
                 uploadFile(uriOutput);
             }
         });
@@ -113,8 +158,9 @@ public class Conversic1 extends AppCompatActivity {
     private void fileManager() {
         Intent intent = new Intent();
         //pdf setType is "application/pdf"
+        //image setType is "image/*"
         //xml setType is "text/xml"
-        intent.setType("image/*");
+        intent.setType("text/xml");
         intent.setAction(Intent.ACTION_GET_CONTENT);
         startActivityForResult(intent, ACTIVITY);
     }
@@ -142,9 +188,183 @@ public class Conversic1 extends AppCompatActivity {
         }
     }
 
-    private Uri convertFile() {
-        return null;
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+    private Uri convertFile() throws ParserConfigurationException, IOException, ParsingException {
+        StaccatoParserListener listener = new StaccatoParserListener();
+        MusicXmlParser parser = new MusicXmlParser();
+
+        parser.addParserListener(listener);
+
+        File file = FileUtil.from(Conversic1.this, uri);
+
+        parser.parse(file);
+
+        Pattern pattern = listener.getPattern();
+
+        SignatureSubparser signatureSubparser = new SignatureSubparser();
+
+        GetElement notes = new GetElement();
+
+        List<NoteAndBarLine> list = notes.getNotesUsed(pattern);
+
+        byte rootPosition = signatureSubparser.
+                convertAccidentalCountToKeyRootPositionInOctave(-notes.getKey(), notes.getScale());
+        String keySignature = signatureSubparser.createKeyString(rootPosition, notes.getScale());
+
+        updateValue(keySignature.charAt(0));
+
+        List<String> converted = new ArrayList<>();
+
+        for(NoteAndBarLine element : list) {
+            if(NoteAndBarLine.isNote(element)) {
+                if(element.getNote().getOriginalString().charAt(0) == 'C') {
+                    converted.add(C + getRhythm(element.getNote()));
+                } else if(element.getNote().getOriginalString().charAt(0) == 'D') {
+                    converted.add(D + getRhythm(element.getNote()));
+                } else if(element.getNote().getOriginalString().charAt(0) == 'E') {
+                    converted.add(E + getRhythm(element.getNote()));
+                } else if(element.getNote().getOriginalString().charAt(0) == 'F') {
+                    converted.add(F + getRhythm(element.getNote()));
+                } else if(element.getNote().getOriginalString().charAt(0) == 'G') {
+                    converted.add(G + getRhythm(element.getNote()));
+                } else if(element.getNote().getOriginalString().charAt(0) == 'A') {
+                    converted.add(A + getRhythm(element.getNote()));
+                } else if(element.getNote().getOriginalString().charAt(0) == 'B') {
+                    converted.add(B + getRhythm(element.getNote()));
+                } else if(element.getNote().getOriginalString().charAt(0) == 'R') {
+                    converted.add(rest + getRhythm(element.getNote()));
+                }
+            } else {
+                converted.add(element.toString() + barLine);
+            }
+        }
+
+        txtViewMusicString.setText(converted.toString());
+
+        //return uri of converted sheet so that it can be uploaded to library
+        return createPdf(converted);
     }
+
+    //hardcode
+    private void updateValue(char c) {
+        if(c == 'C') {
+            C = 1;
+            D = C + 1;
+            E = D + 1;
+            F = E + 1;
+            G = F + 1;
+            A = G + 1;
+            B = A + 1;
+        } else if(c == 'D') {
+            D = 1;
+            E = D + 1;
+            F = E + 1;
+            G = F + 1;
+            A = G + 1;
+            B = A + 1;
+            C = B + 1;
+        } else if(c == 'E') {
+            E = 1;
+            F = E + 1;
+            G = F + 1;
+            A = G + 1;
+            B = A + 1;
+            C = B + 1;
+            D = C + 1;
+        } else if(c == 'F') {
+            F = 1;
+            G = F + 1;
+            A = G + 1;
+            B = A + 1;
+            C = B + 1;
+            D = C + 1;
+            E = D + 1;
+        } else if(c == 'G') {
+            G = 1;
+            A = G + 1;
+            B = A + 1;
+            C = B + 1;
+            D = C + 1;
+            E = D + 1;
+            F = E + 1;
+        } else if(c == 'A') {
+            A = 1;
+            B = A + 1;
+            C = B + 1;
+            D = C + 1;
+            E = D + 1;
+            F = E + 1;
+            G = F + 1;
+        } else if(c == 'B') {
+            B = 1;
+            C = B + 1;
+            D = C + 1;
+            E = D + 1;
+            F = E + 1;
+            G = F + 1;
+            A = G + 1;
+        }
+    }
+
+    private String getRhythm(Note note) {
+        if(note.getDuration() == semiquaver) {
+            return "s";
+        } else if(note.getDuration() == quaver) {
+            return "q";
+        } else if(note.getDuration() == crotchet) {
+            return "c";
+        } else if(note.getDuration() == minim) {
+            return "m";
+        }
+        return "";
+    }
+
+
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+    private Uri createPdf(List<String> items) {
+        PdfDocument pdf = new PdfDocument();
+        Paint title = new Paint();
+        Paint paint = new Paint();
+        Paint paintLine = new Paint();
+        PdfDocument.PageInfo pageInfo = new PdfDocument.PageInfo.Builder(200,
+                400, 1).create();
+        PdfDocument.Page page = pdf.startPage(pageInfo);
+        Canvas canvas = page.getCanvas();
+
+        title.setTextAlign(Paint.Align.CENTER);
+        canvas.drawText("" + fileDescription.getText(), 100, 50, title);
+
+        int x = 20;
+        int y = 100;
+        for(String item : items) {
+            canvas.drawText(String.valueOf(item.charAt(0)), x, y, paint);
+            if(String.valueOf(item.charAt(1)).equals("q")) {
+                canvas.drawLine(x - 3, y + 10,x + 10, y + 10, paintLine);
+            } else if(String.valueOf(item.charAt(1)).equals("m")) {
+                canvas.drawLine(x + 10, y - 5, x + 15, y - 5, paintLine);
+            } else if(String.valueOf(item.charAt(1)).equals("s")) {
+                canvas.drawLine(x - 5, y + 15,x + 10, y + 15, paintLine);
+            }
+            x = x + 20;
+            if(x > 180) {
+                x = 20;
+                y = y + 40;
+            }
+        }
+        pdf.finishPage(page);
+        //getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS),"test.pdf"
+        String path = "/sdcard/Documents/test.pdf";
+        File file = new File(path);
+        try {
+            pdf.writeTo(new FileOutputStream(file));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        pdf.close();
+        return Uri.parse("file://" + path);
+    }
+
+
 
     private void uploadFile(Uri uri) {
         if(uploadTask != null && uploadTask.isInProgress()) {
