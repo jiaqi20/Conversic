@@ -332,7 +332,7 @@ public class Conversic1 extends AppCompatActivity {
             timeSignature = "4/4";
         }
 
-        txtViewMusicString.setText("Converted successfully!");
+        txtViewMusicString.setText("CONVERSIC!");
 
         createPdf(converted, keySignature.charAt(0), timeSignature);
         //return uri of converted sheet so that it can be uploaded to library
