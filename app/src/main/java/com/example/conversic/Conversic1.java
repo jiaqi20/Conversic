@@ -332,7 +332,7 @@ public class Conversic1 extends AppCompatActivity {
             timeSignature = "4/4";
         }
 
-        txtViewMusicString.setText(converted.toString());
+        txtViewMusicString.setText("Converted successfully!");
 
         createPdf(converted, keySignature.charAt(0), timeSignature);
         //return uri of converted sheet so that it can be uploaded to library
@@ -456,7 +456,7 @@ public class Conversic1 extends AppCompatActivity {
         }
         pdf.finishPage(page);
         //getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS),"test.pdf"
-        String path = "/sdcard/Documents/test2.pdf";
+        String path = "/sdcard/Documents/test1.pdf";
         File file = new File(path);
         try {
             pdf.writeTo(new FileOutputStream(file));
