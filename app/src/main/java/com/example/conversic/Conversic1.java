@@ -456,7 +456,7 @@ public class Conversic1 extends AppCompatActivity {
         }
         pdf.finishPage(page);
         //getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS),"test.pdf"
-        String path = "/sdcard/Documents/sheet.pdf";
+        String path = "/sdcard/Documents/sheetie.pdf";
         File file = new File(path);
         try {
             pdf.writeTo(new FileOutputStream(file));
