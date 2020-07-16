@@ -3,10 +3,12 @@ package com.example.conversic;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
+import androidx.drawerlayout.widget.DrawerLayout;
 
 import android.Manifest;
 import android.app.ProgressDialog;
@@ -20,6 +22,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.view.MenuItem;
 import android.view.View;
 import android.webkit.MimeTypeMap;
 import android.widget.Button;
@@ -30,6 +33,7 @@ import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
@@ -97,6 +101,9 @@ public class Conversic1 extends AppCompatActivity {
 
     private ProgressBar progressUpload;
 
+    private DrawerLayout dl;
+    private ActionBarDrawerToggle abdt;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -159,6 +166,45 @@ public class Conversic1 extends AppCompatActivity {
                 moveToLibActivity();
             }
         });
+
+        //Navigation Panel
+        dl = (DrawerLayout)findViewById(R.id.DrawerLayout);
+        abdt = new ActionBarDrawerToggle(this, dl, R.string.Open, R.string.Close);
+        abdt.setDrawerIndicatorEnabled(true);
+
+        dl.addDrawerListener(abdt);
+        abdt.syncState();
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        NavigationView nav_view = (NavigationView)findViewById(R.id.nav_view);
+
+        nav_view.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+                int id = menuItem.getItemId();
+
+                if(id==R.id.conversic){
+                    Toast.makeText(Conversic1.this, "Conversic",Toast.LENGTH_SHORT).show();
+                }
+                else if(id==R.id.crashcourse){
+                    Toast.makeText(Conversic1.this, "Crash Course",Toast.LENGTH_SHORT).show();
+                }
+                else if(id==R.id.sheetslib){
+                    Toast.makeText(Conversic1.this, "Sheets Library",Toast.LENGTH_SHORT).show();
+                }
+                else if(id==R.id.logout){
+                    Toast.makeText(Conversic1.this, "Logged Out Successfully",Toast.LENGTH_SHORT).show();
+                }
+                return true;
+            }
+        });
+    }
+
+    //Navigation Panel
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        return abdt.onOptionsItemSelected(item) || super.onOptionsItemSelected(item);
     }
 
     private void moveBack(){
@@ -421,37 +467,42 @@ public class Conversic1 extends AppCompatActivity {
         Paint paint = new Paint();
         Paint paintLine = new Paint();
         Paint paintDot = new Paint();
-        PdfDocument.PageInfo pageInfo = new PdfDocument.PageInfo.Builder(200,
-                400, 1).create();
+        PdfDocument.PageInfo pageInfo = new PdfDocument.PageInfo.Builder(2480,
+                3508, 1).create();
         PdfDocument.Page page = pdf.startPage(pageInfo);
         Canvas canvas = page.getCanvas();
 
+        paint.setTextSize(50);
+
+        title.setTextSize(100);
+
         title.setTextAlign(Paint.Align.CENTER);
-        canvas.drawText("" + fileDescription.getText(), 100, 40, title);
+        canvas.drawText("" + fileDescription.getText(), 1240, 312, title);
 
+        title.setTextSize(50);
         title.setTextAlign(Paint.Align.LEFT);
-        canvas.drawText("1 = " + key + "  " + time, 20, 70, title);
+        canvas.drawText("1 = " + key + "  " + time, 118, 687, title);
 
-        int x = 20;
-        int y = 100;
+        int x = 118;
+        int y = 937;
         for(String item : items) {
             canvas.drawText(String.valueOf(item.charAt(0)), x, y, paint);
             if(String.valueOf(item.charAt(1)).equals("q")) {
-                canvas.drawLine(x - 3, y + 5,x + 10, y + 5, paintLine);
+                canvas.drawLine( x , y + 5,x + 29, y + 5, paintLine);
             } else if(String.valueOf(item.charAt(1)).equals("m")) {
-                canvas.drawLine(x + 10, y - 5, x + 15, y - 5, paintLine);
+                canvas.drawLine(x + 15, y - 5, x + 40, y - 5, paintLine);
             } else if(String.valueOf(item.charAt(1)).equals("s")) {
-                canvas.drawLine(x - 5, y + 8,x + 10, y + 8, paintLine);
+                canvas.drawLine(x, y + 8,x + 29, y + 8, paintLine);
             }
             if(String.valueOf(item.charAt(2)).equals(up)) {
-                canvas.drawCircle(x + 3, y - 5, 1, paintDot);
+                canvas.drawCircle(x + 6, y - 5, 2, paintDot);
             } else if(String.valueOf(item.charAt(2)).equals(down)) {
-                canvas.drawCircle(x + 3, y + 10, 1, paintDot);
+                canvas.drawCircle(x + 6, y + 10, 2, paintDot);
             }
-            x = x + 20;
-            if(x > 180) {
-                x = 20;
-                y = y + 40;
+            x = x + 29;
+            if(x > 2350) {
+                x = 118;
+                y = y + 250;
             }
         }
         pdf.finishPage(page);

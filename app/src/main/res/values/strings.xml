@@ -21,4 +21,6 @@
     <string name="check_library">Check Library</string>
     <string name="_1">1</string>
     <string name="_2">2</string>
+    <string name="Open">NavPanel</string>
+    <string name="Close">NavPanel</string>
 </resources>
