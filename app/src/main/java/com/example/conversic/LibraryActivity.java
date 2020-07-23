@@ -1,13 +1,20 @@
 package com.example.conversic;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Toast;
 
@@ -23,8 +30,13 @@ import java.util.ArrayList;
 
 public class LibraryActivity extends AppCompatActivity {
 
+    @Nullable
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.activity_library, container, false);
+    }
+
     private RecyclerView recyclerView;
-    private Button btnBack;
+    //private Button btnBack;
 
     private MyAdapter adapter;
 
@@ -36,16 +48,6 @@ public class LibraryActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_library);
-
-        //Navigation: Back Button
-        btnBack = findViewById(R.id.buttonBack);
-
-        btnBack.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                moveBack();
-            }
-        });
 
         recyclerView = findViewById(R.id.recycler_view);
         recyclerView.setHasFixedSize(true);
@@ -73,10 +75,5 @@ public class LibraryActivity extends AppCompatActivity {
                         Toast.LENGTH_LONG).show();
             }
         });
-    }
-
-    private void moveBack(){
-        Intent intent = new Intent(LibraryActivity.this, MainActivity.class);
-        startActivity(intent);
     }
 }

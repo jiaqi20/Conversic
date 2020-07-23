@@ -65,7 +65,7 @@ public class Conversic1 extends AppCompatActivity {
     private static final int PERMISSION = 9;
     private static final int ACTIVITY = 86;
 
-    private Button btnBack, btnBrowse, btnConvert, btnUpload, btnCLib;
+    private Button btnBrowse, btnConvert, btnUpload, btnCLib;
     private TextView txtViewDisplay, txtViewMusicString;
     private EditText fileDescription;
 
@@ -101,8 +101,6 @@ public class Conversic1 extends AppCompatActivity {
 
     private ProgressBar progressUpload;
 
-    private DrawerLayout dl;
-    private ActionBarDrawerToggle abdt;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -117,20 +115,13 @@ public class Conversic1 extends AppCompatActivity {
         txtViewMusicString = findViewById(R.id.textViewMusicString);
         fileDescription = findViewById(R.id.editTextDescription);
 
-        btnBack = findViewById(R.id.buttonBack);
         btnBrowse = findViewById(R.id.buttonBrowse);
         btnConvert = findViewById(R.id.buttonConvert);
         btnUpload = findViewById(R.id.buttonUpload);
         btnCLib = findViewById(R.id.buttonCLib);
 
-        progressUpload = findViewById(R.id.progressUpload);
 
-        btnBack.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                moveBack();
-            }
-        });
+        progressUpload = findViewById(R.id.progressUpload);
 
         btnBrowse.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -166,50 +157,6 @@ public class Conversic1 extends AppCompatActivity {
                 moveToLibActivity();
             }
         });
-
-        //Navigation Panel
-        dl = (DrawerLayout)findViewById(R.id.DrawerLayout);
-        abdt = new ActionBarDrawerToggle(this, dl, R.string.Open, R.string.Close);
-        abdt.setDrawerIndicatorEnabled(true);
-
-        dl.addDrawerListener(abdt);
-        abdt.syncState();
-
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
-        NavigationView nav_view = (NavigationView)findViewById(R.id.nav_view);
-
-        nav_view.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
-                int id = menuItem.getItemId();
-
-                if(id==R.id.conversic){
-                    Toast.makeText(Conversic1.this, "Conversic",Toast.LENGTH_SHORT).show();
-                }
-                else if(id==R.id.crashcourse){
-                    Toast.makeText(Conversic1.this, "Crash Course",Toast.LENGTH_SHORT).show();
-                }
-                else if(id==R.id.sheetslib){
-                    Toast.makeText(Conversic1.this, "Sheets Library",Toast.LENGTH_SHORT).show();
-                }
-                else if(id==R.id.logout){
-                    Toast.makeText(Conversic1.this, "Logged Out Successfully",Toast.LENGTH_SHORT).show();
-                }
-                return true;
-            }
-        });
-    }
-
-    //Navigation Panel
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        return abdt.onOptionsItemSelected(item) || super.onOptionsItemSelected(item);
-    }
-
-    private void moveBack(){
-        Intent intent = new Intent(Conversic1.this, ConversicActivity.class);
-        startActivity(intent);
     }
 
     private void moveToLibActivity() {

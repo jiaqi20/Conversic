@@ -7,36 +7,19 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:id="@+id/DrawerLayout">
+    android:id="@+id/DrawerLayout"
+    android:background="@color/windowBackground">
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context=".Conversic1">
 
         <Button
-            android:id="@+id/buttonBack"
-            android:layout_width="55dp"
-            android:layout_height="50dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginLeft="16dp"
-            android:layout_marginTop="16dp"
-            android:drawableStart="@android:drawable/ic_menu_revert"
-            android:drawableLeft="@android:drawable/ic_menu_revert"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.0" />
-
-        <Button
             android:id="@+id/buttonBrowse"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:background="@color/Button"
             android:text="Choose file"
             android:textSize="20sp"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -62,6 +45,7 @@
             android:id="@+id/buttonConvert"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:background="@color/Button"
             android:text="Convert"
             android:textSize="20sp"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -89,6 +73,7 @@
             android:id="@+id/buttonCLib"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:background="@color/Button"
             android:text="Check Library"
             android:textSize="20sp"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -115,6 +100,7 @@
             android:id="@+id/buttonUpload"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:background="@color/Button"
             android:text="Upload"
             android:textSize="20sp"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -163,15 +149,5 @@
             app:layout_constraintVertical_bias="0.157" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
-
-    <com.google.android.material.navigation.NavigationView
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:id="@+id/nav_view"
-        android:layout_gravity="start"
-        app:headerLayout="@layout/navigation_header"
-        app:menu="@menu/navigation_menu">
-
-    </com.google.android.material.navigation.NavigationView>
 
 </androidx.drawerlayout.widget.DrawerLayout>

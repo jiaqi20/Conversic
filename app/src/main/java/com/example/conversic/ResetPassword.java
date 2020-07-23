@@ -20,7 +20,6 @@ public class ResetPassword extends AppCompatActivity {
     private EditText email;
     private Button button;
     private FirebaseAuth fAuth;
-    private Button btnBack;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,15 +29,6 @@ public class ResetPassword extends AppCompatActivity {
         email = findViewById(R.id.editText);
         button = findViewById(R.id.buttonSE);
         fAuth = FirebaseAuth.getInstance();
-        btnBack = findViewById(R.id.buttonBack);
-
-        btnBack.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                moveBack();
-            }
-        });
-
 
         button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -65,10 +55,5 @@ public class ResetPassword extends AppCompatActivity {
                 }
             }
         });
-    }
-
-    private void moveBack(){
-        Intent intent = new Intent(ResetPassword.this, Login.class);
-        startActivity(intent);
     }
 }

@@ -38,7 +38,7 @@ public class Conversic2 extends AppCompatActivity {
     private static final int PERMISSION = 9;
     private static final int ACTIVITY = 86;
 
-    private Button btnBack, btnBrowse, btnConvert, btnCLib;
+    private Button  btnBrowse, btnConvert, btnCLib;
     private TextView txtViewDisplay;
     private EditText fileDescription;
 
@@ -64,17 +64,9 @@ public class Conversic2 extends AppCompatActivity {
         txtViewDisplay = findViewById(R.id.textViewDisplay);
         fileDescription = findViewById(R.id.editTextDescription);
 
-        btnBack = findViewById(R.id.buttonBack);
         btnBrowse = findViewById(R.id.buttonBrowse);
         btnConvert = findViewById(R.id.buttonConvert);
         btnCLib = findViewById(R.id.buttonCLib);
-
-        btnBack.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                moveBack();
-            }
-        });
 
         btnBrowse.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -97,11 +89,6 @@ public class Conversic2 extends AppCompatActivity {
                 moveToLibActivity();
             }
         });
-    }
-
-    private void moveBack(){
-        Intent intent = new Intent(Conversic2.this, ConversicActivity.class);
-        startActivity(intent);
     }
 
     private void moveToLibActivity() {

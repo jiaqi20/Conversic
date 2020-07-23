@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_conversic"
+            android:icon="@drawable/ic_music_note_black_24dp"
+            android:title="@string/conversic" />
+        <item
+            android:id="@+id/nav_crash_course"
+            android:icon="@drawable/ic_live_tv_black_24dp"
+            android:title="@string/crash_course" />
+        <item
+            android:id="@+id/nav_library"
+            android:icon="@drawable/ic_folder_black_24dp"
+            android:title="@string/library" />
+        <item
+            android:id="@+id/nav_logout"
+            android:icon="@drawable/ic_subdirectory_arrow_left_black_24dp"
+            android:title="@string/logout" />
+    </group>
+</menu>

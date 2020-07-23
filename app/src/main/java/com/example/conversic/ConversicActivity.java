@@ -1,17 +1,25 @@
 package com.example.conversic;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
 
-public class ConversicActivity extends AppCompatActivity {
+public class ConversicActivity extends FragmentActivity {
 
-    //Navigation: Back Button
-    Button btnBack;
+    @Nullable
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.activity_conversic, container, false);
+    }
 
     //Navigation: Selection Buttons
     ImageButton btn1;
@@ -22,16 +30,6 @@ public class ConversicActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_conversic);
-
-        //Navigation: Back Button
-        btnBack = findViewById(R.id.buttonBack);
-
-        btnBack.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                moveBack();
-            }
-        });
 
         //Navigation: Selection Buttons
         btn1 = findViewById(R.id.imageButton1);
@@ -73,11 +71,6 @@ public class ConversicActivity extends AppCompatActivity {
 
     private void moveToConversic2(){
         Intent intent = new Intent(ConversicActivity.this, Conversic2.class);
-        startActivity(intent);
-    }
-
-    private void moveBack(){
-        Intent intent = new Intent(ConversicActivity.this, MainActivity.class);
         startActivity(intent);
     }
 }
