@@ -31,6 +31,9 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.chaquo.python.PyObject;
+import com.chaquo.python.Python;
+import com.chaquo.python.android.AndroidPlatform;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.navigation.NavigationView;
@@ -65,17 +68,20 @@ public class Conversic1 extends AppCompatActivity {
     private static final int PERMISSION = 9;
     private static final int ACTIVITY = 86;
 
-    private Button btnBrowse, btnConvert, btnUpload, btnCLib;
+    private Button btnBrowse, btnConvert;
     private TextView txtViewDisplay, txtViewMusicString;
     private EditText fileDescription;
+
+    private String xmlPath;
 
     private Uri uri;
     private Uri contentUri;
 
-    private static final double semiquaver = 0.9375;
-    private static final double quaver = semiquaver * 2;
-    private static final double crotchet = quaver * 2;
-    private static final double minim = crotchet * 2;
+    private static final double whole = 1;
+    private static final double minim = whole/2;
+    private static final double crotchet = minim/2;
+    private static final double quaver = crotchet/2;
+    private static final double semiquaver = quaver/2;
 
     private static final int rest = 0;
     private static final String barLine = "b";
@@ -92,6 +98,8 @@ public class Conversic1 extends AppCompatActivity {
     private int G;
     private int A;
     private int B;
+
+    private char keySignature;
 
     private FirebaseUser user;
     private StorageReference storageRef;
@@ -117,9 +125,6 @@ public class Conversic1 extends AppCompatActivity {
 
         btnBrowse = findViewById(R.id.buttonBrowse);
         btnConvert = findViewById(R.id.buttonConvert);
-        btnUpload = findViewById(R.id.buttonUpload);
-        btnCLib = findViewById(R.id.buttonCLib);
-
 
         progressUpload = findViewById(R.id.progressUpload);
 
@@ -130,31 +135,18 @@ public class Conversic1 extends AppCompatActivity {
             }
         });
 
+        //initPython();
+
         btnConvert.setOnClickListener(new View.OnClickListener() {
             @RequiresApi(api = Build.VERSION_CODES.KITKAT)
             @Override
             public void onClick(View v) {
-                Uri uriOutput = null;
                 try {
-                    //uriOutput = convertFile();
-                    convertFile();
+                    convert();
                 } catch (ParserConfigurationException | IOException | ParsingException e) {
-                    Toast.makeText(Conversic1.this, e.getMessage(), Toast.LENGTH_LONG).show();
+                    //Toast.makeText(Conversic1.this, e.getMessage(), Toast.LENGTH_LONG).show();
+                    e.printStackTrace();
                 }
-            }
-        });
-
-        btnUpload.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                uploadFile();
-            }
-        });
-
-        btnCLib.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                moveToLibActivity();
             }
         });
     }
@@ -169,7 +161,7 @@ public class Conversic1 extends AppCompatActivity {
         //pdf setType is "application/pdf"
         //image setType is "image/*"
         //xml setType is "text/xml"
-        intent.setType("text/xml");
+        intent.setType("image/*");
         intent.setAction(Intent.ACTION_GET_CONTENT);
         startActivityForResult(intent, ACTIVITY);
     }
@@ -204,23 +196,27 @@ public class Conversic1 extends AppCompatActivity {
 
         parser.addParserListener(listener);
 
-        File file = FileUtil.from(Conversic1.this, uri);
+        //File file = FileUtil.from(Conversic1.this, uri);
+        //File file = new File(txtViewMusicString.getText().toString());
+
+        File file = new File(xmlPath);
 
         parser.parse(file);
 
         Pattern pattern = listener.getPattern();
 
-        SignatureSubparser signatureSubparser = new SignatureSubparser();
+        //SignatureSubparser signatureSubparser = new SignatureSubparser();
 
         GetElement notes = new GetElement();
 
         List<NoteAndBarLine> list = notes.getNotesUsed(pattern);
 
-        byte rootPosition = signatureSubparser.
-                convertAccidentalCountToKeyRootPositionInOctave(-notes.getKey(), notes.getScale());
-        String keySignature = signatureSubparser.createKeyString(rootPosition, notes.getScale());
+        //byte rootPosition = signatureSubparser.
+        //      convertAccidentalCountToKeyRootPositionInOctave(-notes.getKey(), notes.getScale());
+        //String keySignature = signatureSubparser.createKeyString(rootPosition, notes.getScale());
 
-        updateValue(keySignature.charAt(0));
+        this.keySignature = file.getName().charAt(0);
+        updateValue(this.keySignature);
 
         List<String> converted = new ArrayList<>();
 
@@ -229,83 +225,86 @@ public class Conversic1 extends AppCompatActivity {
 
         for(NoteAndBarLine element : list) {
             if(NoteAndBarLine.isNote(element)) {
-                if(element.getNote().getOriginalString().charAt(0) == 'C') {
-                    if(element.getNote().getOriginalString().charAt(1) == '3') {
+                if (element.getNote().isRest()) {
+                    converted.add(rest + getRhythm(element.getNote()) + none);
+                    if (isTrue) {
+                        beatCount = beatCount + element.getNote().getDuration();
+                    }
+                } else if (element.getNote().getOriginalString().charAt(0) == 'C') {
+                    if (element.getNote().getOriginalString().charAt(1) == '3') {
                         converted.add(C + getRhythm(element.getNote()) + down);
-                    } else if(element.getNote().getOriginalString().charAt(1) == '4') {
+                    } else if (element.getNote().getOriginalString().charAt(1) == '4') {
                         converted.add(C + getRhythm(element.getNote()) + none);
-                    } else if(element.getNote().getOriginalString().charAt(1) == '5') {
+                    } else if (element.getNote().getOriginalString().charAt(1) == '5') {
                         converted.add(C + getRhythm(element.getNote()) + up);
                     }
-                    if(isTrue) {
+                    if (isTrue) {
                         beatCount = beatCount + element.getNote().getDuration();
                     }
-                } else if(element.getNote().getOriginalString().charAt(0) == 'D') {
-                    if(element.getNote().getOriginalString().charAt(1) == '3') {
+                } else if (element.getNote().getOriginalString().charAt(0) == 'D') {
+                    if (element.getNote().getOriginalString().charAt(1) == '3') {
                         converted.add(D + getRhythm(element.getNote()) + down);
-                    } else if(element.getNote().getOriginalString().charAt(1) == '4') {
+                    } else if (element.getNote().getOriginalString().charAt(1) == '4') {
                         converted.add(D + getRhythm(element.getNote()) + none);
-                    } else if(element.getNote().getOriginalString().charAt(1) == '5') {
+                    } else if (element.getNote().getOriginalString().charAt(1) == '5') {
                         converted.add(D + getRhythm(element.getNote()) + up);
                     }
-                    if(isTrue) {
+                    if (isTrue) {
                         beatCount = beatCount + element.getNote().getDuration();
                     }
-                } else if(element.getNote().getOriginalString().charAt(0) == 'E') {
-                    if(element.getNote().getOriginalString().charAt(1) == '3') {
+                } else if (element.getNote().getOriginalString().charAt(0) == 'E') {
+                    if (element.getNote().getOriginalString().charAt(1) == '3') {
                         converted.add(E + getRhythm(element.getNote()) + down);
-                    } else if(element.getNote().getOriginalString().charAt(1) == '4') {
+                    } else if (element.getNote().getOriginalString().charAt(1) == '4') {
                         converted.add(E + getRhythm(element.getNote()) + none);
-                    } else if(element.getNote().getOriginalString().charAt(1) == '5') {
+                    } else if (element.getNote().getOriginalString().charAt(1) == '5') {
                         converted.add(E + getRhythm(element.getNote()) + up);
                     }
-                    if(isTrue) {
+                    if (isTrue) {
                         beatCount = beatCount + element.getNote().getDuration();
                     }
-                } else if(element.getNote().getOriginalString().charAt(0) == 'F') {
-                    if(element.getNote().getOriginalString().charAt(1) == '3') {
+                } else if (element.getNote().getOriginalString().charAt(0) == 'F') {
+                    if (element.getNote().getOriginalString().charAt(1) == '3') {
                         converted.add(F + getRhythm(element.getNote()) + down);
-                    } else if(element.getNote().getOriginalString().charAt(1) == '4') {
+                    } else if (element.getNote().getOriginalString().charAt(1) == '4') {
                         converted.add(F + getRhythm(element.getNote()) + none);
-                    } else if(element.getNote().getOriginalString().charAt(1) == '5') {
+                    } else if (element.getNote().getOriginalString().charAt(1) == '5') {
                         converted.add(F + getRhythm(element.getNote()) + up);
                     }
-                    if(isTrue) {
+                    if (isTrue) {
                         beatCount = beatCount + element.getNote().getDuration();
                     }
-                } else if(element.getNote().getOriginalString().charAt(0) == 'G') {
-                    if(element.getNote().getOriginalString().charAt(1) == '3') {
+                } else if (element.getNote().getOriginalString().charAt(0) == 'G') {
+                    if (element.getNote().getOriginalString().charAt(1) == '3') {
                         converted.add(G + getRhythm(element.getNote()) + down);
-                    } else if(element.getNote().getOriginalString().charAt(1) == '4') {
+                    } else if (element.getNote().getOriginalString().charAt(1) == '4') {
                         converted.add(G + getRhythm(element.getNote()) + none);
-                    } else if(element.getNote().getOriginalString().charAt(1) == '5') {
+                    } else if (element.getNote().getOriginalString().charAt(1) == '5') {
                         converted.add(G + getRhythm(element.getNote()) + up);
                     }
-                    if(isTrue) {
+                    if (isTrue) {
                         beatCount = beatCount + element.getNote().getDuration();
                     }
-                } else if(element.getNote().getOriginalString().charAt(0) == 'A') {
-                    if(element.getNote().getOriginalString().charAt(1) == '3') {
+                } else if (element.getNote().getOriginalString().charAt(0) == 'A') {
+                    if (element.getNote().getOriginalString().charAt(1) == '3') {
                         converted.add(A + getRhythm(element.getNote()) + down);
-                    } else if(element.getNote().getOriginalString().charAt(1) == '4') {
+                    } else if (element.getNote().getOriginalString().charAt(1) == '4') {
                         converted.add(A + getRhythm(element.getNote()) + none);
-                    } else if(element.getNote().getOriginalString().charAt(1) == '5') {
+                    } else if (element.getNote().getOriginalString().charAt(1) == '5') {
                         converted.add(A + getRhythm(element.getNote()) + up);
                     }
-                    if(isTrue) {
+                    if (isTrue) {
                         beatCount = beatCount + element.getNote().getDuration();
                     }
-                } else if(element.getNote().getOriginalString().charAt(0) == 'B') {
-                    if(element.getNote().getOriginalString().charAt(1) == '3') {
+                } else if (element.getNote().getOriginalString().charAt(0) == 'B') {
+                    if (element.getNote().getOriginalString().charAt(1) == '3') {
                         converted.add(B + getRhythm(element.getNote()) + down);
-                    } else if(element.getNote().getOriginalString().charAt(1) == '4') {
+                    } else if (element.getNote().getOriginalString().charAt(1) == '4') {
                         converted.add(B + getRhythm(element.getNote()) + none);
-                    } else if(element.getNote().getOriginalString().charAt(1) == '5') {
+                    } else if (element.getNote().getOriginalString().charAt(1) == '5') {
                         converted.add(B + getRhythm(element.getNote()) + up);
                     }
-                } else if(element.getNote().getOriginalString().charAt(0) == 'R') {
-                    converted.add(rest + getRhythm(element.getNote()) + none);
-                    if(isTrue) {
+                    if (isTrue) {
                         beatCount = beatCount + element.getNote().getDuration();
                     }
                 }
@@ -321,15 +320,21 @@ public class Conversic1 extends AppCompatActivity {
             timeSignature = "2/4";
         } else if(beatCount == minim + crotchet){
             timeSignature = "3/4";
-        } else if(beatCount == minim * 2) {
+        } else if(beatCount == whole) {
             timeSignature = "4/4";
         }
 
-        txtViewMusicString.setText("CONVERSIC!");
+        //txtViewMusicString.setText(converted.toString());
 
-        createPdf(converted, keySignature.charAt(0), timeSignature);
+        createPdf(converted, this.keySignature, timeSignature);
         //return uri of converted sheet so that it can be uploaded to library
         //return createPdf(converted);
+
+        uploadFile();
+        //txtViewMusicString.setText("Convert and upload successfully!");
+        txtViewMusicString.setText("Conversic!");
+        Toast.makeText(Conversic1.this, "Convert and upload successfully!",
+                Toast.LENGTH_LONG).show();
     }
 
     //hardcode
@@ -402,6 +407,8 @@ public class Conversic1 extends AppCompatActivity {
             return "c";
         } else if(note.getDuration() == minim) {
             return "m";
+        } else if(note.getDuration() == whole) {
+            return "w";
         }
         return "";
     }
@@ -494,8 +501,8 @@ public class Conversic1 extends AppCompatActivity {
                                         String uploadID = databaseRef.push().getKey();
                                         databaseRef.child(user.getUid()).child(uploadID).setValue(upload);
 
-                                        Toast.makeText(Conversic1.this, "Upload successfully",
-                                                Toast.LENGTH_LONG).show();
+                                        //Toast.makeText(Conversic1.this, "Upload successfully",
+                                               // Toast.LENGTH_LONG).show();
                                     }
                                 });
                             }
@@ -523,4 +530,33 @@ public class Conversic1 extends AppCompatActivity {
         MimeTypeMap mimeTypeMap = MimeTypeMap.getSingleton();
         return mimeTypeMap.getExtensionFromMimeType(contentResolver.getType(uri));
     }
+
+    private void imgProcessing() throws IOException {
+        initPython();
+        File imageFile = FileUtil.from(Conversic1.this, uri);
+
+        //Toast.makeText(Conversic1.this, "Converting...", Toast.LENGTH_SHORT).show();
+        //txtViewMusicString.setText(imageFile.getPath());
+
+        Python py = Python.getInstance();
+        final PyObject pyObject = py.getModule("main");
+
+        PyObject obj = pyObject.callAttr("main", imageFile.getPath());
+        //txtViewMusicString.setText(obj.toString());
+        xmlPath = obj.toString();
+        //Toast.makeText(Conversic1.this, obj.toString(), Toast.LENGTH_LONG).show();
+    }
+
+    private void convert() throws IOException, ParsingException, ParserConfigurationException {
+        imgProcessing();
+        convertFile();
+        moveToLibActivity();
+    }
+
+    private void initPython() {
+        if(!Python.isStarted()) {
+            Python.start(new AndroidPlatform(this));
+        }
+    }
+
 }
