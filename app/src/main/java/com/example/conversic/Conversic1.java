@@ -71,7 +71,7 @@ public class Conversic1 extends AppCompatActivity {
     private Uri uri; //uri of browsed file
     private Uri contentUri; //content uri of converted pdf that is used for uploading to firebase
 
-    //values for respective rhythms
+    //value for respective rhythms
     private static final double whole = 1;
     private static final double minim = whole/2;
     private static final double crotchet = minim/2;
