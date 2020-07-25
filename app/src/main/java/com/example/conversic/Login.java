@@ -18,7 +18,6 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 
 public class Login extends AppCompatActivity {
-    //login
     private EditText email, password;
     private Button login;
     private TextView welcome, register;
@@ -53,6 +52,9 @@ public class Login extends AppCompatActivity {
         startActivity(new Intent(getApplicationContext(), ResetPassword.class));
     }
 
+    /**
+     * Login user with email and password authentication.
+     */
     public void loginUser() {
         String em = email.getText().toString().trim();
         String pw = password.getText().toString().trim();

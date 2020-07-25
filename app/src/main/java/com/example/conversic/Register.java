@@ -18,7 +18,7 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 
 public class Register extends AppCompatActivity {
-    //register
+
     private TextView register, login;
     private EditText name, email, password;
     private Button register2;
@@ -35,7 +35,6 @@ public class Register extends AppCompatActivity {
         email = findViewById(R.id.email);
         password = findViewById(R.id.password);
         fAuth = FirebaseAuth.getInstance();
-        //progressbar
         register2 = findViewById(R.id.buttonRegister);
 
         if(fAuth.getCurrentUser() != null) {
@@ -55,6 +54,9 @@ public class Register extends AppCompatActivity {
         startActivity(new Intent(getApplicationContext(), Login.class));
     }
 
+    /**
+     * Register user with email and password (Google firebase).
+     */
     private void registerUser() {
         String em = email.getText().toString().trim();
         String pw = password.getText().toString().trim();
@@ -68,8 +70,6 @@ public class Register extends AppCompatActivity {
             password.setError("Password is required!");
             return;
         }
-
-        //progressBar.setVisibility(View.VISIBLE); need to set invisible first
 
         //register user
         fAuth.createUserWithEmailAndPassword(em, pw).addOnCompleteListener(

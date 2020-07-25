@@ -3,15 +3,12 @@ package com.example.conversic;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
-import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
-import androidx.drawerlayout.widget.DrawerLayout;
 
 import android.Manifest;
-import android.app.ProgressDialog;
 import android.content.ContentResolver;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -22,7 +19,6 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.view.MenuItem;
 import android.view.View;
 import android.webkit.MimeTypeMap;
 import android.widget.Button;
@@ -36,7 +32,6 @@ import com.chaquo.python.Python;
 import com.chaquo.python.android.AndroidPlatform;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
@@ -50,7 +45,6 @@ import com.google.firebase.storage.UploadTask;
 import org.jfugue.integration.MusicXmlParser;
 import org.jfugue.pattern.Pattern;
 import org.jfugue.theory.Note;
-import org.staccato.SignatureSubparser;
 import org.staccato.StaccatoParserListener;
 
 import java.io.File;
@@ -72,18 +66,18 @@ public class Conversic1 extends AppCompatActivity {
     private TextView txtViewDisplay, txtViewMusicString;
     private EditText fileDescription;
 
-    private String xmlPath;
+    private String xmlPath; //filepath of musicxml file generated
 
-    private Uri uri;
-    private Uri contentUri;
+    private Uri uri; //uri of browsed file
+    private Uri contentUri; //content uri of converted pdf that is used for uploading to firebase
 
+    //values for respective rhythms
     private static final double whole = 1;
     private static final double minim = whole/2;
     private static final double crotchet = minim/2;
     private static final double quaver = crotchet/2;
     private static final double semiquaver = quaver/2;
 
-    private static final int rest = 0;
     private static final String barLine = "b";
 
     //dots
@@ -91,6 +85,8 @@ public class Conversic1 extends AppCompatActivity {
     private static final String down = "d";
     private static final String none = "n";
 
+    //value of notes including rest
+    private static final int rest = 0;
     private int C;
     private int D;
     private int E;
@@ -108,7 +104,6 @@ public class Conversic1 extends AppCompatActivity {
     private StorageTask uploadTask;
 
     private ProgressBar progressUpload;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -135,8 +130,6 @@ public class Conversic1 extends AppCompatActivity {
             }
         });
 
-        //initPython();
-
         btnConvert.setOnClickListener(new View.OnClickListener() {
             @RequiresApi(api = Build.VERSION_CODES.KITKAT)
             @Override
@@ -144,13 +137,15 @@ public class Conversic1 extends AppCompatActivity {
                 try {
                     convert();
                 } catch (ParserConfigurationException | IOException | ParsingException e) {
-                    //Toast.makeText(Conversic1.this, e.getMessage(), Toast.LENGTH_LONG).show();
-                    e.printStackTrace();
+                    Toast.makeText(Conversic1.this, e.getMessage(), Toast.LENGTH_LONG).show();
                 }
             }
         });
     }
 
+    /**
+     * Directs to library activity.
+     */
     private void moveToLibActivity() {
         Intent intent = new Intent(Conversic1.this, LibraryActivity.class);
         startActivity(intent);
@@ -166,6 +161,9 @@ public class Conversic1 extends AppCompatActivity {
         startActivityForResult(intent, ACTIVITY);
     }
 
+    /**
+     * Browse music staff img (jpg).
+     */
     private void browseFile() {
         //check permission
         if (ContextCompat.checkSelfPermission(Conversic1.this,
@@ -189,6 +187,9 @@ public class Conversic1 extends AppCompatActivity {
         }
     }
 
+    /**
+     * Convert list of notes and bar lines into list of numbers and bar lines (with some details).
+     */
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     private void convertFile() throws ParserConfigurationException, IOException, ParsingException {
         StaccatoParserListener listener = new StaccatoParserListener();
@@ -196,41 +197,34 @@ public class Conversic1 extends AppCompatActivity {
 
         parser.addParserListener(listener);
 
-        //File file = FileUtil.from(Conversic1.this, uri);
-        //File file = new File(txtViewMusicString.getText().toString());
-
         File file = new File(xmlPath);
 
-        parser.parse(file);
+        parser.parse(file); //parse musicxml file
 
         Pattern pattern = listener.getPattern();
 
-        //SignatureSubparser signatureSubparser = new SignatureSubparser();
-
         GetElement notes = new GetElement();
 
-        List<NoteAndBarLine> list = notes.getNotesUsed(pattern);
+        List<NoteAndBarLine> list = notes.getNotesUsed(pattern); //get notes and barlines from pattern object
 
-        //byte rootPosition = signatureSubparser.
-        //      convertAccidentalCountToKeyRootPositionInOctave(-notes.getKey(), notes.getScale());
-        //String keySignature = signatureSubparser.createKeyString(rootPosition, notes.getScale());
-
+        //update number of notes according to the key signature
         this.keySignature = file.getName().charAt(0);
         updateValue(this.keySignature);
 
-        List<String> converted = new ArrayList<>();
+        List<String> converted = new ArrayList<>(); //initialise list of converted strings
 
-        boolean isTrue = true;
-        double beatCount = 0;
+        boolean isTrue = true; //checking first bar for the beat count only
+        double beatCount = 0; //used to determine time signature
 
         for(NoteAndBarLine element : list) {
+            //for Note object
             if(NoteAndBarLine.isNote(element)) {
-                if (element.getNote().isRest()) {
+                if (element.getNote().isRest()) { //Rest
                     converted.add(rest + getRhythm(element.getNote()) + none);
                     if (isTrue) {
                         beatCount = beatCount + element.getNote().getDuration();
                     }
-                } else if (element.getNote().getOriginalString().charAt(0) == 'C') {
+                } else if (element.getNote().getOriginalString().charAt(0) == 'C') { //C
                     if (element.getNote().getOriginalString().charAt(1) == '3') {
                         converted.add(C + getRhythm(element.getNote()) + down);
                     } else if (element.getNote().getOriginalString().charAt(1) == '4') {
@@ -241,7 +235,7 @@ public class Conversic1 extends AppCompatActivity {
                     if (isTrue) {
                         beatCount = beatCount + element.getNote().getDuration();
                     }
-                } else if (element.getNote().getOriginalString().charAt(0) == 'D') {
+                } else if (element.getNote().getOriginalString().charAt(0) == 'D') { //D
                     if (element.getNote().getOriginalString().charAt(1) == '3') {
                         converted.add(D + getRhythm(element.getNote()) + down);
                     } else if (element.getNote().getOriginalString().charAt(1) == '4') {
@@ -252,7 +246,7 @@ public class Conversic1 extends AppCompatActivity {
                     if (isTrue) {
                         beatCount = beatCount + element.getNote().getDuration();
                     }
-                } else if (element.getNote().getOriginalString().charAt(0) == 'E') {
+                } else if (element.getNote().getOriginalString().charAt(0) == 'E') { //E
                     if (element.getNote().getOriginalString().charAt(1) == '3') {
                         converted.add(E + getRhythm(element.getNote()) + down);
                     } else if (element.getNote().getOriginalString().charAt(1) == '4') {
@@ -263,7 +257,7 @@ public class Conversic1 extends AppCompatActivity {
                     if (isTrue) {
                         beatCount = beatCount + element.getNote().getDuration();
                     }
-                } else if (element.getNote().getOriginalString().charAt(0) == 'F') {
+                } else if (element.getNote().getOriginalString().charAt(0) == 'F') { //F
                     if (element.getNote().getOriginalString().charAt(1) == '3') {
                         converted.add(F + getRhythm(element.getNote()) + down);
                     } else if (element.getNote().getOriginalString().charAt(1) == '4') {
@@ -274,7 +268,7 @@ public class Conversic1 extends AppCompatActivity {
                     if (isTrue) {
                         beatCount = beatCount + element.getNote().getDuration();
                     }
-                } else if (element.getNote().getOriginalString().charAt(0) == 'G') {
+                } else if (element.getNote().getOriginalString().charAt(0) == 'G') { //G
                     if (element.getNote().getOriginalString().charAt(1) == '3') {
                         converted.add(G + getRhythm(element.getNote()) + down);
                     } else if (element.getNote().getOriginalString().charAt(1) == '4') {
@@ -285,7 +279,7 @@ public class Conversic1 extends AppCompatActivity {
                     if (isTrue) {
                         beatCount = beatCount + element.getNote().getDuration();
                     }
-                } else if (element.getNote().getOriginalString().charAt(0) == 'A') {
+                } else if (element.getNote().getOriginalString().charAt(0) == 'A') { //A
                     if (element.getNote().getOriginalString().charAt(1) == '3') {
                         converted.add(A + getRhythm(element.getNote()) + down);
                     } else if (element.getNote().getOriginalString().charAt(1) == '4') {
@@ -296,7 +290,7 @@ public class Conversic1 extends AppCompatActivity {
                     if (isTrue) {
                         beatCount = beatCount + element.getNote().getDuration();
                     }
-                } else if (element.getNote().getOriginalString().charAt(0) == 'B') {
+                } else if (element.getNote().getOriginalString().charAt(0) == 'B') { //B
                     if (element.getNote().getOriginalString().charAt(1) == '3') {
                         converted.add(B + getRhythm(element.getNote()) + down);
                     } else if (element.getNote().getOriginalString().charAt(1) == '4') {
@@ -308,7 +302,7 @@ public class Conversic1 extends AppCompatActivity {
                         beatCount = beatCount + element.getNote().getDuration();
                     }
                 }
-            } else {
+            } else { // for Bar line object
                 converted.add(element.toString() + barLine + none);
                 isTrue = false;
             }
@@ -324,20 +318,23 @@ public class Conversic1 extends AppCompatActivity {
             timeSignature = "4/4";
         }
 
-        //txtViewMusicString.setText(converted.toString());
-
+        //create pdf using converted list
         createPdf(converted, this.keySignature, timeSignature);
-        //return uri of converted sheet so that it can be uploaded to library
-        //return createPdf(converted);
 
+        //upload pdf file to google firebase and library
         uploadFile();
-        //txtViewMusicString.setText("Convert and upload successfully!");
+
+        //done
         txtViewMusicString.setText("Conversic!");
         Toast.makeText(Conversic1.this, "Convert and upload successfully!",
                 Toast.LENGTH_LONG).show();
     }
 
     //hardcode
+    /**
+     * Update the value of conversion for respective key signatures.
+     * @param c First letter name of key signature.
+     */
     private void updateValue(char c) {
         if(c == 'C') {
             C = 1;
@@ -398,6 +395,11 @@ public class Conversic1 extends AppCompatActivity {
         }
     }
 
+    /**
+     * Check the duration of note.
+     * @param note Note.
+     * @return Specific letter name for each rhythm.
+     */
     private String getRhythm(Note note) {
         if(note.getDuration() == semiquaver) {
             return "s";
@@ -413,7 +415,12 @@ public class Conversic1 extends AppCompatActivity {
         return "";
     }
 
-
+    /**
+     * Create pdf file of converted sheet (numbered notation music sheet).
+     * @param items List of notes and bar lines.
+     * @param key Key signature.
+     * @param time Time signature.
+     */
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     private void createPdf(List<String> items, char key, String time) {
         PdfDocument pdf = new PdfDocument();
@@ -460,7 +467,8 @@ public class Conversic1 extends AppCompatActivity {
             }
         }
         pdf.finishPage(page);
-        //getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS),"test.pdf"
+
+        //write the created pdf file into sdcard of android emulator
         String path = "/sdcard/Documents/sheetie.pdf";
         File file = new File(path);
         try {
@@ -469,10 +477,12 @@ public class Conversic1 extends AppCompatActivity {
             e.printStackTrace();
         }
         pdf.close();
-        //uploadFile(Uri.parse("file://" + path));
         contentUri = FileProvider.getUriForFile(this, "com.example.conversic", file);
     }
 
+    /**
+     * Upload the converted pdf file to Google Firebase (Storage and Realtime Database) and library.
+     */
     private void uploadFile() {
         if(uploadTask != null && uploadTask.isInProgress()) {
             Toast.makeText(Conversic1.this, "Upload in progress", Toast.LENGTH_LONG).show();
@@ -500,9 +510,6 @@ public class Conversic1 extends AppCompatActivity {
                                                 uri.toString()); // toString or getPath?
                                         String uploadID = databaseRef.push().getKey();
                                         databaseRef.child(user.getUid()).child(uploadID).setValue(upload);
-
-                                        //Toast.makeText(Conversic1.this, "Upload successfully",
-                                               // Toast.LENGTH_LONG).show();
                                     }
                                 });
                             }
@@ -531,28 +538,37 @@ public class Conversic1 extends AppCompatActivity {
         return mimeTypeMap.getExtensionFromMimeType(contentResolver.getType(uri));
     }
 
+    /**
+     * Process the staff music image using python code.
+     */
     private void imgProcessing() throws IOException {
         initPython();
         File imageFile = FileUtil.from(Conversic1.this, uri);
 
-        //Toast.makeText(Conversic1.this, "Converting...", Toast.LENGTH_SHORT).show();
         //txtViewMusicString.setText(imageFile.getPath());
 
         Python py = Python.getInstance();
+
+        //name of python file
         final PyObject pyObject = py.getModule("main");
 
+        //name of function and its arguments
         PyObject obj = pyObject.callAttr("main", imageFile.getPath());
-        //txtViewMusicString.setText(obj.toString());
         xmlPath = obj.toString();
-        //Toast.makeText(Conversic1.this, obj.toString(), Toast.LENGTH_LONG).show();
     }
 
+    /**
+     * Redirects to library activity after image processing and conversion.
+     */
     private void convert() throws IOException, ParsingException, ParserConfigurationException {
         imgProcessing();
         convertFile();
         moveToLibActivity();
     }
 
+    /**
+     * Initialise python before running the code.
+     */
     private void initPython() {
         if(!Python.isStarted()) {
             Python.start(new AndroidPlatform(this));
