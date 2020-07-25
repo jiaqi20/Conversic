@@ -446,20 +446,43 @@ public class Conversic1 extends AppCompatActivity {
 
         int x = 118;
         int y = 937;
-        for(String item : items) {
+        for(int i = 0; i < items.size() ; i++) {
+            String item = items.get(i);
+            String next = "";
+            if(i<items.size()-1) {
+                next = items.get(i + 1);
+            }
             canvas.drawText(String.valueOf(item.charAt(0)), x, y, paint);
+            if(String.valueOf(item.charAt(2)).equals(up)) {
+                canvas.drawCircle(x + 6, y - 8, 2, paintDot);
+            } else if(String.valueOf(item.charAt(2)).equals(down)) {
+                canvas.drawCircle(x + 6, y + 15, 2, paintDot);
+            }
             if(String.valueOf(item.charAt(1)).equals("q")) {
+                x = x + 29;
                 canvas.drawLine( x , y + 5,x + 29, y + 5, paintLine);
             } else if(String.valueOf(item.charAt(1)).equals("m")) {
-                canvas.drawLine(x + 15, y - 5, x + 40, y - 5, paintLine);
+                x = x + 29*4;
+                canvas.drawLine(x, y - 5, x + 29, y - 5, paintLine);
+                x = x + 29*4;
             } else if(String.valueOf(item.charAt(1)).equals("s")) {
                 canvas.drawLine(x, y + 8,x + 29, y + 8, paintLine);
+                canvas.drawLine(x, y + 12,x + 29, y + 12, paintLine);
+                if(item.charAt(1) != next.charAt(1)){
+                    x = x + 29;
+                }
+            } else if(String.valueOf(item.charAt(1)).equals("c")) {
+                x = x + 29 * 4;
+            } else if(String.valueOf(item.charAt(1)).equals("w")) {
+                x = x + 29*4;
+                canvas.drawLine(x, y + 8,x + 29, y + 8, paintLine);
+                x = x + 29*4;
+                canvas.drawLine(x, y + 8,x + 29, y + 8, paintLine);
+                x = x + 29*4;
+                canvas.drawLine(x, y + 8,x + 29, y + 8, paintLine);
+                x = x + 29*4;
             }
-            if(String.valueOf(item.charAt(2)).equals(up)) {
-                canvas.drawCircle(x + 6, y - 5, 2, paintDot);
-            } else if(String.valueOf(item.charAt(2)).equals(down)) {
-                canvas.drawCircle(x + 6, y + 10, 2, paintDot);
-            }
+            // Update output coordinates
             x = x + 29;
             if(x > 2350) {
                 x = 118;
