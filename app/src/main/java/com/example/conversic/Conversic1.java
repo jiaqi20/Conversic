@@ -402,8 +402,6 @@ public class Conversic1 extends AppCompatActivity {
             return "c";
         } else if(note.getDuration() == minim) {
             return "m";
-        } else if(note.getDuration() == ) {
-            return "m";
         }
         return "";
     }
@@ -421,8 +419,6 @@ public class Conversic1 extends AppCompatActivity {
         PdfDocument.Page page = pdf.startPage(pageInfo);
         Canvas canvas = page.getCanvas();
 
-        paintLine.setStrokeWidth(5);
-
         paint.setTextSize(50);
 
         title.setTextSize(100);
@@ -436,29 +432,19 @@ public class Conversic1 extends AppCompatActivity {
 
         int x = 118;
         int y = 937;
-        for(int i = 0; i <items.size(); i++) {
-            String item = items.get(i);
-            String next = items.get(i+1);
+        for(String item : items) {
             canvas.drawText(String.valueOf(item.charAt(0)), x, y, paint);
+            if(String.valueOf(item.charAt(1)).equals("q")) {
+                canvas.drawLine( x , y + 5,x + 29, y + 5, paintLine);
+            } else if(String.valueOf(item.charAt(1)).equals("m")) {
+                canvas.drawLine(x + 15, y - 5, x + 40, y - 5, paintLine);
+            } else if(String.valueOf(item.charAt(1)).equals("s")) {
+                canvas.drawLine(x, y + 8,x + 29, y + 8, paintLine);
+            }
             if(String.valueOf(item.charAt(2)).equals(up)) {
                 canvas.drawCircle(x + 6, y - 5, 2, paintDot);
             } else if(String.valueOf(item.charAt(2)).equals(down)) {
                 canvas.drawCircle(x + 6, y + 10, 2, paintDot);
-            }
-            if(String.valueOf(item.charAt(1)).equals("q")) {
-                canvas.drawLine( x , y + 5,x + 29, y + 5, paintLine);
-                x = x + 29; //Spacing between notes
-            } else if(String.valueOf(item.charAt(1)).equals("m")) {
-                x = x + 29 * 4;
-                canvas.drawLine(x, y - 5, x + 29, y - 5, paintLine);
-                x = x + 29 * 4;
-            } else if(String.valueOf(item.charAt(1)).equals("s")) {
-                canvas.drawLine(x, y + 8,x + 29, y + 8, paintLine);
-                if(item.charAt(1) != next.charAt(1)) {
-                    x = x + 29;
-                }
-            }else if(String.valueOf(item.charAt(1)).equals("c")) {
-                x = x + 29*4;
             }
             x = x + 29;
             if(x > 2350) {

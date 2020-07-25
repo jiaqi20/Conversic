@@ -1,34 +1,39 @@
 package com.example.conversic;
 
 public class Upload {
-    private String imgName;
-    private String imgUrl;
+    private String fileName;
+    private String fileUrl;
 
     public Upload() {
 
     }
 
-    public Upload(String imgName, String imgUrl) {
-        if(imgName.trim().equals("")) {
-            imgName = "No name";
+    /**
+     * Constructor to create upload object.
+     * @param fileName Name of image.
+     * @param fileUrl
+     */
+    public Upload(String fileName, String fileUrl) {
+        if(fileName.trim().equals("")) {
+            fileName = "No name";
         }
-        this.imgName = imgName;
-        this.imgUrl = imgUrl;
+        this.fileName = fileName;
+        this.fileUrl = fileUrl;
     }
 
-    public String getImgName() {
-        return imgName;
+    public String getFileName() {
+        return fileName;
     }
 
-    public void setImgName(String imgName) {
-        this.imgName = imgName;
+    public void setFileName(String imgName) {
+        this.fileName = imgName;
     }
 
-    public String getImgUrl() {
-        return imgUrl;
+    public String getFileUrl() {
+        return fileUrl;
     }
 
-    public void setImgUrl(String imgUrl) {
-        this.imgUrl = imgUrl;
+    public void setFileUrl(String imgUrl) {
+        this.fileUrl = imgUrl;
     }
 }

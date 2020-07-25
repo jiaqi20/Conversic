@@ -1,5 +1,6 @@
 apply plugin: 'com.android.application'
 apply plugin: 'com.google.gms.google-services'
+apply plugin:'com.chaquo.python'
 
 android {
     compileSdkVersion 29
@@ -13,6 +14,31 @@ android {
         versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+        python {
+            pip {
+                install "numpy"
+                install "opencv-contrib-python"
+                install "pymusicxml"
+                install "pillow"
+            }
+        }
+
+        sourceSets {
+            main {
+                python {
+                    srcDirs = ["src/main/python"]
+                }
+            }
+        }
+
+        python {
+            buildPython "C:/Users/Qi/AppData/Local/Programs/Python/Python38-32/python.exe"
+        }
+
+        ndk {
+            abiFilters "armeabi-v7a", "x86"
+        }
     }
 
     buildTypes {

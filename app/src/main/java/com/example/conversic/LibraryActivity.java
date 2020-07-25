@@ -36,7 +36,6 @@ public class LibraryActivity extends AppCompatActivity {
     }
 
     private RecyclerView recyclerView;
-    //private Button btnBack;
 
     private MyAdapter adapter;
 
@@ -65,6 +64,7 @@ public class LibraryActivity extends AppCompatActivity {
                     Upload upload = postDataSnapshot.getValue(Upload.class);
                     uploads.add(upload);
                 }
+                //creates recycler view of converted pdf files in library
                 adapter = new MyAdapter(recyclerView,LibraryActivity.this, uploads);
                 recyclerView.setAdapter(adapter);
             }

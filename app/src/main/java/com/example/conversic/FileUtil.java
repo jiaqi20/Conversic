@@ -21,6 +21,12 @@ public class FileUtil {
 
     }
 
+    /**
+     * Creates file using context and uri.
+     * @param context Context.
+     * @param uri Uri of file.
+     * @return File created.
+     */
     public static File from(Context context, Uri uri) throws IOException {
         InputStream inputStream = context.getContentResolver().openInputStream(uri);
         String fileName = getFileName(context, uri);

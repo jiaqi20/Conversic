@@ -11,10 +11,17 @@ public class NoteAndBarLine {
     private static final int noteId = 1;
     private static final int barLineId = 0;
 
+    /**
+     * Constructor for bar line.
+     */
     NoteAndBarLine() {
         this.id = 0;
     }
 
+    /**
+     * Constructor for note.
+     * @param note Note.
+     */
     NoteAndBarLine(Note note) {
         this.id = 1;
         this.note = note;
