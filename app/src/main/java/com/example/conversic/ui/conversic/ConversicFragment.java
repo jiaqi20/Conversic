@@ -44,7 +44,7 @@ public class ConversicFragment extends Fragment {
         btnConversic2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //Toast.makeText(ConversicFragment.this, "Function under developement", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(ConversicFragment.this, "Function under development", Toast.LENGTH_SHORT).show();
                 //startActivity(new Intent(getContext(), Conversic2.class));
             }
         });
