@@ -43,6 +43,14 @@ public class ConversicFragment extends Fragment {
                 startActivity(new Intent(getContext(), Conversic1.class));
             }
         });
+
+        btnConversic2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(getActivity(), "Function under development", Toast.LENGTH_SHORT).show();
+            }
+        });
+        /*
         btnConversic2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -51,6 +59,8 @@ public class ConversicFragment extends Fragment {
                 //startActivity(new Intent(getContext(), Conversic2.class));
             }
         });
+
+         */
 
         return view;
     }
