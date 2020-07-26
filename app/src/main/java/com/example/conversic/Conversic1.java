@@ -198,6 +198,7 @@ public class Conversic1 extends AppCompatActivity {
         parser.addParserListener(listener);
 
         File file = new File(xmlPath);
+        //File file = FileUtil.from(Conversic1.this, uri);
 
         parser.parse(file); //parse musicxml file
 
@@ -452,18 +453,30 @@ public class Conversic1 extends AppCompatActivity {
             if(i < items.size() - 1) {
                 next = items.get(i + 1);
             }
-            canvas.drawText(String.valueOf(item.charAt(0)), x, y, paint);
+            if(i == 0) {
+                x = x + 29;
+            }
+            if(String.valueOf(item.charAt(1)).equals(barLine)) {
+                canvas.drawText(String.valueOf(item.charAt(0)), x, y, paint);
+                x = x + 29*3;
+                if((2480 - x) < 725) {
+                    x = 118;
+                    y = y + 250;
+                }
+            } else {
+                canvas.drawText(String.valueOf(item.charAt(0)), x, y, paint);
+            }
             if(String.valueOf(item.charAt(2)).equals(up)) {
-                canvas.drawCircle(x + 6, y - 8, 2, paintDot);
+                canvas.drawCircle(x + 15, y - 50, 3, paintDot);
             } else if(String.valueOf(item.charAt(2)).equals(down)) {
-                canvas.drawCircle(x + 6, y + 15, 2, paintDot);
+                canvas.drawCircle(x + 6, y + 15, 10, paintDot);
             }
             if(String.valueOf(item.charAt(1)).equals("q")) {
-                x = x + 29;
-                canvas.drawLine( x , y + 5,x + 29, y + 5, paintLine);
+                x = x + 29*4;
+                canvas.drawLine(x - 29*4 , y + 10,x -29*3, y + 10, paintLine);
             } else if(String.valueOf(item.charAt(1)).equals("m")) {
                 x = x + 29*4;
-                canvas.drawLine(x, y - 5, x + 29, y - 5, paintLine);
+                canvas.drawLine(x, y - 15, x + 29, y - 15, paintLine);
                 x = x + 29*4;
             } else if(String.valueOf(item.charAt(1)).equals("s")) {
                 canvas.drawLine(x, y + 8,x + 29, y + 8, paintLine);
@@ -475,11 +488,11 @@ public class Conversic1 extends AppCompatActivity {
                 x = x + 29 * 4;
             } else if(String.valueOf(item.charAt(1)).equals("w")) {
                 x = x + 29*4;
-                canvas.drawLine(x, y + 8,x + 29, y + 8, paintLine);
+                canvas.drawLine(x, y - 15,x + 29, y - 15, paintLine);
                 x = x + 29*4;
-                canvas.drawLine(x, y + 8,x + 29, y + 8, paintLine);
+                canvas.drawLine(x, y - 15,x + 29, y - 15, paintLine);
                 x = x + 29*4;
-                canvas.drawLine(x, y + 8,x + 29, y + 8, paintLine);
+                canvas.drawLine(x, y - 15,x + 29, y - 15, paintLine);
                 x = x + 29*4;
             }
             // Update output coordinates
@@ -492,7 +505,7 @@ public class Conversic1 extends AppCompatActivity {
         pdf.finishPage(page);
 
         //write the created pdf file into sdcard of android emulator
-        String path = "/sdcard/Documents/sheetie.pdf";
+        String path = "/sdcard/Documents/sheet.pdf";
         File file = new File(path);
         try {
             pdf.writeTo(new FileOutputStream(file));
@@ -568,7 +581,7 @@ public class Conversic1 extends AppCompatActivity {
         initPython();
         File imageFile = FileUtil.from(Conversic1.this, uri);
 
-        //txtViewMusicString.setText(imageFile.getPath());
+        txtViewMusicString.setText(imageFile.getPath());
 
         Python py = Python.getInstance();
 
@@ -578,6 +591,10 @@ public class Conversic1 extends AppCompatActivity {
         //name of function and its arguments
         PyObject obj = pyObject.callAttr("main", imageFile.getPath());
         xmlPath = obj.toString();
+
+        //txtViewMusicString.setText("yay");
+
+
     }
 
     /**
