@@ -34,7 +34,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull MyAdapter.ViewHolder holder, int position) {
-        holder.txtViewFile.setText(uploads.get(position).getFileName());
+        holder.txtViewFile.setText(uploads.get(position).getImgName());
     }
 
     @Override
@@ -54,7 +54,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
                 @Override
                 public void onClick(View v) {
                     int position = recyclerView.getChildLayoutPosition(v);
-                    Uri uri = Uri.parse(uploads.get(position).getFileUrl());
+                    Uri uri = Uri.parse(uploads.get(position).getImgUrl());
                     Intent intent = new Intent(Intent.ACTION_VIEW, uri);
                     context.startActivity(intent);
                 }

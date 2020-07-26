@@ -1156,7 +1156,7 @@ def main(filepath):
     # ------- Write to disk -------
     print("[INFO] Writing MusicXml to disk")
     #outputpath = path + '\\output\\' + key_signature + 'major.xml'
-    output_path = "/sdcard/Documents/" + key_signature + "major.xml"
+    output_path = "/sdcard/Documents/" + key_signature + "sheet.xml"
     score.export_to_file(output_path)
 
     return output_path
