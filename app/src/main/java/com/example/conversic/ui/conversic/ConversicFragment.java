@@ -1,5 +1,7 @@
 package com.example.conversic.ui.conversic;
 
+import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.FragmentActivity;
 import androidx.lifecycle.ViewModelProviders;
 
 import android.content.Intent;
@@ -44,7 +46,8 @@ public class ConversicFragment extends Fragment {
         btnConversic2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //Toast.makeText(ConversicFragment.this, "Function under development", Toast.LENGTH_SHORT).show();
+                DialogFragment dialog = (DialogFragment) DialogFragment.instantiate(getActivity(), "Hello world");
+                dialog.show(getFragmentManager(), "dialog");
                 //startActivity(new Intent(getContext(), Conversic2.class));
             }
         });

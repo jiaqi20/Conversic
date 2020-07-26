@@ -43,4 +43,6 @@
     <string name="are_you_sure_you_wont_to_log_out">Are you sure you wont to log out?</string>
     <string name="yes">Yes</string>
     <string name="leaving_so_soon">Leaving so soon?</string>
+    <string name="confirm_password">Confirm Password</string>
+    <string name="go">Go</string>
 </resources>

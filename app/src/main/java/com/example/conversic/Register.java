@@ -20,7 +20,7 @@ import com.google.firebase.auth.FirebaseAuth;
 public class Register extends AppCompatActivity {
 
     private TextView register, login;
-    private EditText name, email, password;
+    private EditText name, email, password, confirmPassword;
     private Button register2;
     private FirebaseAuth fAuth;
 
@@ -34,6 +34,7 @@ public class Register extends AppCompatActivity {
         name = findViewById(R.id.name);
         email = findViewById(R.id.email);
         password = findViewById(R.id.password);
+        confirmPassword = findViewById(R.id.confirm_password);
         fAuth = FirebaseAuth.getInstance();
         register2 = findViewById(R.id.buttonRegister);
 
@@ -58,16 +59,30 @@ public class Register extends AppCompatActivity {
      * Register user with email and password (Google firebase).
      */
     private void registerUser() {
+        String nm = name.getText().toString().trim();
         String em = email.getText().toString().trim();
         String pw = password.getText().toString().trim();
+        String cpw = confirmPassword.getText().toString().trim();
 
         //validate the email and password
+        if(TextUtils.isEmpty(nm)) {
+            name.setError("Name is required!");
+            return;
+        }
         if(TextUtils.isEmpty(em)) {
             email.setError("Email is required!");
             return;
         }
         if(TextUtils.isEmpty(pw)) {
             password.setError("Password is required!");
+            return;
+        }
+        if(TextUtils.isEmpty(cpw)) {
+            confirmPassword.setError("Password Confirmation is required!");
+            return;
+        }
+        if(!pw.equals(cpw)){
+            confirmPassword.setError("Password does not match!");
             return;
         }
 
@@ -79,7 +94,7 @@ public class Register extends AppCompatActivity {
                         if(task.isSuccessful()) {
                             Toast.makeText(Register.this, "User created",
                                     Toast.LENGTH_SHORT).show();
-                            startActivity(new Intent(getApplicationContext(), MainActivity.class));
+                            startActivity(new Intent(getApplicationContext(), NavigationDrawerActivity.class));
                         } else {
                             Toast.makeText(Register.this, "Error!",
                                     Toast.LENGTH_SHORT).show();

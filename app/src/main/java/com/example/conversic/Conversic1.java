@@ -449,7 +449,7 @@ public class Conversic1 extends AppCompatActivity {
         for(int i = 0; i < items.size() ; i++) {
             String item = items.get(i);
             String next = "";
-            if(i<items.size()-1) {
+            if(i < items.size() - 1) {
                 next = items.get(i + 1);
             }
             canvas.drawText(String.valueOf(item.charAt(0)), x, y, paint);
